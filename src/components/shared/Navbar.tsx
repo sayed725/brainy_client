@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, LogOut, Menu } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu  } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {

@@ -36,7 +36,7 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
-            <ul className="space-y-3 text-gray-400">
+            <ul className="space-y-3 text-gray-400 flex flex-wrap gap-5">
               <li>
                 <Link 
                   href="/" 
@@ -47,10 +47,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/services" 
+                  href="/tutor" 
                   className="hover:text-[#1cb89e] transition-colors"
                 >
-                  Services
+                  Tutors
                 </Link>
               </li>
               <li>
@@ -63,10 +63,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/about" 
+                  href="/contact" 
                   className="hover:text-[#1cb89e] transition-colors"
                 >
-                  About
+                  Contact
                 </Link>
               </li>
             </ul>
