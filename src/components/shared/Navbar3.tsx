@@ -55,12 +55,12 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <img
-              src="/logo.png"
-              alt="DevShine Logo"
+              src="/brainy_logo-removebg-preview.png"
+              alt="Brainy Logo"
               className="h-8 w-8 sm:h-10 sm:w-10"
             />
             <span className="text-2xl font-bold tracking-tight sm:text-3xl">
-              DevShine
+              Brainy
             </span>
           </Link>
 
@@ -71,11 +71,11 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative text-sm font-medium transition-colors hover:text-[#c8f21d]",
+                  "relative text-sm font-medium transition-colors hover:text-[#1cb89e]",
                   pathname === item.href
-                    ? "text-[#c8f21d]"
+                    ? "text-[#1cb89e]"
                     : "text-foreground/80",
-                  "after:absolute after:bottom-[-6px] after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-[#c8f21d] after:transition-all after:duration-300 hover:after:w-full"
+                  "after:absolute after:bottom-[-6px] after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-[#1cb89e] after:transition-all after:duration-300 hover:after:w-full"
                 )}
               >
                 {item.title}
@@ -92,7 +92,7 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-[#c8f21d] text-black font-bold">
+                      <AvatarFallback className="bg-[#1cb89e] text-black font-bold">
                         {userInitial}
                       </AvatarFallback>
                     </Avatar>
@@ -125,7 +125,7 @@ export default function Navbar() {
                 <Button asChild variant="outline">
                   <Link href="/login">Login</Link>
                 </Button>
-                <Button asChild className="bg-[#c8f21d] hover:bg-[#c8f21d]/90 text-black">
+                <Button asChild className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-black">
                   <Link href="/register">Register</Link>
                 </Button>
               </>
@@ -137,7 +137,7 @@ export default function Navbar() {
             <ModeToggle />
             {isAuthenticated && (
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-[#c8f21d] text-black text-sm font-bold">
+                <AvatarFallback className="bg-[#1cb89e] text-black text-sm font-bold">
                   {userInitial}
                 </AvatarFallback>
               </Avatar>
@@ -153,11 +153,11 @@ export default function Navbar() {
                 <SheetHeader className="mb-8">
                   <Link href="/" className="flex items-center gap-3" onClick={closeMobileMenu}>
                     <img
-                      src="/logo.png"
-                      alt="DevShine"
+                      src="/brainy_logo-removebg-preview.png"
+                      alt="Brainy Logo"
                       className="h-10 w-10"
                     />
-                    <span className="text-2xl font-bold">DevShine</span>
+                    <span className="text-2xl font-bold">Brainy</span>
                   </Link>
                 </SheetHeader>
 
@@ -170,8 +170,8 @@ export default function Navbar() {
                       className={cn(
                         "text-lg font-medium transition-colors",
                         pathname === item.href
-                          ? "text-[#c8f21d]"
-                          : "text-foreground/80 hover:text-[#c8f21d]"
+                          ? "text-[#1cb89e]"
+                          : "text-foreground/80 hover:text-[#1cb89e]"
                       )}
                     >
                       {item.title}
@@ -207,7 +207,7 @@ export default function Navbar() {
                             Login
                           </Link>
                         </Button>
-                        <Button asChild className="w-full bg-[#c8f21d] hover:bg-[#c8f21d]/90 text-black">
+                        <Button asChild className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-black">
                           <Link href="/register" onClick={closeMobileMenu}>
                             Register
                           </Link>
