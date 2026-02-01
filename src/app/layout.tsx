@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import { Navbar } from "@/components/shared/Navbar";
+// import { Navbar } from "@/components/shared/Navbar";
+import Navbar3 from "@/components/shared/Navbar3";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar/>
+            <Navbar3/>
            
             {children}
           </ThemeProvider>
