@@ -68,7 +68,7 @@ const handleLogOut = () => {
   //   router.push("/");
   // }
 };
-
+// navbar component
 const Navbar = ({
   logo = {
     url: "/",
