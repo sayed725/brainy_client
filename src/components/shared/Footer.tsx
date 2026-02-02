@@ -12,7 +12,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="w-full text-white pt-12 pb-8  bg-gradient-to-r from-teal-700 to-teal-950 
+    <footer className="w-full text-white pt-12 pb-3  bg-gradient-to-r from-teal-700 to-teal-950 
         dark:from-gray-950 dark:to-gray-900
         text-white dark:text-gray-100">
       {/* Main footer content */}
@@ -115,8 +115,8 @@ export default function Footer() {
       </div>
 
       {/* Back to top + Copyright */}
-      <div className="mt-16 border-t border-gray-800 pt-8">
-        <div className="container mx-auto px-6 lg:px-8 max-w-7xl">
+      <div className="mt-16 border-t border-gray-800 pt-3">
+        <div className="container mx-auto px-6 lg:px-0">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-gray-400 text-sm">
             <p>
               © {new Date().getFullYear()} <span className="text-[#1cb89e]">Brainy</span>. 
