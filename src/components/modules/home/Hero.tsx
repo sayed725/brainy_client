@@ -53,11 +53,15 @@ export default function Hero() {
       </div>
 
       {/* Main content – spacing unchanged */}
-      <div className="relative mx-auto w-11/12 lg:w-10/12 max-w-screen-2xl py-16 lg:py-24">
+      <div className="relative mx-auto w-11/12 max-w-screen-2xl py-16 lg:py-24">
         <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Left – Text + Stats + Search */}
           <div className="lg:w-1/2 space-y-2 animate-fade-in-up">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/15 dark:bg-gray-800/40 backdrop-blur-sm text-white dark:text-gray-200 text-sm font-medium border border-white/10 dark:border-gray-700/60 tracking-wider">
+            <span className="relative flex h-3 w-3 mr-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1cb89e] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#1cb89e]"></span>
+              </span>
               Trusted by <span className="text-[#1cb89e] mx-1">5,000+</span>Students & Parents
             </div>
 

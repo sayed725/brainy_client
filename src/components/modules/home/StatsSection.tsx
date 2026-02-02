@@ -45,6 +45,7 @@ export default function StatsSection() {
       <div 
         className="
           container mx-auto 
+          w-11/12 max-w-screen-2xl
           py-6
         "
       >
