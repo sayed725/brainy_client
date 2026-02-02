@@ -1,4 +1,3 @@
-// components/Navbar.tsx
 "use client";
 
 import { useState } from "react";
@@ -23,11 +22,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu, LogOut, LayoutDashboard } from "lucide-react";
-import { ModeToggle } from "@/components/layout/ModeToggle"; // Adjust path if needed
-
-// Optional: Replace with real user data later
-const isAuthenticated = false; // Set dynamically based on auth state
-const userInitial = "A"; // e.g., from user.name or email
+import { ModeToggle } from "@/components/layout/ModeToggle";
+import { authClient } from "@/lib/auth-client";
 
 const menuItems = [
   { title: "Home", href: "/" },
@@ -40,19 +36,55 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const handleLogout = () => {
-    // TODO: Implement actual logout logic
-    console.log("Logging out...");
-    // router.push("/login");
+  const {
+    data: session,
+    isPending, // loading state
+    error,
+    refetch,
+  } = authClient.useSession();
+
+  // console.log("Session in Navbar", session, isPending, error);
+
+  const isAuthenticated = !!session?.user;
+  const userInitial =
+    session?.user?.name?.charAt(0)?.toUpperCase() ||
+    session?.user?.email?.charAt(0)?.toUpperCase() ||
+    "?";
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    // Optional: refetch(); // if you want to force refresh
+    // router.push("/login"); // if you have useRouter
   };
 
   const closeMobileMenu = () => setIsOpen(false);
 
+  if (isPending) {
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-md">
+        <div className="container mx-auto px-4 lg:px-0 py-3">
+          <div className="h-10 flex items-center justify-between">
+            <div className="w-24 h-8 bg-muted animate-pulse rounded" />
+            <div className="hidden lg:flex gap-8">
+              <div className="w-16 h-5 bg-muted animate-pulse rounded" />
+              <div className="w-16 h-5 bg-muted animate-pulse rounded" />
+              <div className="w-16 h-5 bg-muted animate-pulse rounded" />
+            </div>
+            <div className="flex gap-4">
+              <div className="w-10 h-10 bg-muted animate-pulse rounded-full" />
+              <div className="w-24 h-10 bg-muted animate-pulse rounded" />
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 lg:px-0 py-3">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo – unchanged */}
           <Link href="/" className="flex items-center gap-3">
             <img
               src="/brainy_logo-removebg-preview.png"
@@ -64,7 +96,7 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation – unchanged */}
           <div className="hidden lg:flex items-center gap-8 flex-1 justify-center">
             {menuItems.map((item) => (
               <Link
@@ -83,7 +115,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop Right Side */}
+          {/* Desktop Right Side – now uses real session */}
           <div className="hidden lg:flex items-center gap-4">
             <ModeToggle />
 
@@ -132,7 +164,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Menu Trigger */}
+          {/* Mobile Menu Trigger – unchanged structure */}
           <div className="flex items-center gap-2 lg:hidden">
             <ModeToggle />
             {isAuthenticated && (
@@ -194,7 +226,7 @@ export default function Navbar() {
                             handleLogout();
                             closeMobileMenu();
                           }}
-                          className="flex items-center gap-3 text-lg text-red-600 w-full"
+                          className="flex items-center gap-3 text-lg text-red-600 w-full text-left"
                         >
                           <LogOut className="h-5 w-5" />
                           Log Out
@@ -207,7 +239,10 @@ export default function Navbar() {
                             Login
                           </Link>
                         </Button>
-                        <Button asChild className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white">
+                        <Button
+                          asChild
+                          className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
+                        >
                           <Link href="/register" onClick={closeMobileMenu}>
                             Register
                           </Link>

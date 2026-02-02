@@ -8,9 +8,9 @@ import { authClient } from "@/lib/auth-client";
 export default async function Home() {
 
 
-  const session = await authClient.getSession();
+  // const session = await authClient.getSession();
 
-  console.log("Session in home page", session);
+  // console.log("Session in home page", session);
 
 
 

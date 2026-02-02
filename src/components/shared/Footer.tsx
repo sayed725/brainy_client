@@ -154,7 +154,7 @@ export default function Footer() {
       </div>
 
       {/* Back to top button */}
-      <div className="fixed bottom-8 right-8 z-50 md:bottom-12 md:right-12">
+      {/* <div className="fixed bottom-8 right-8 z-50 md:bottom-12 md:right-12">
         <a 
           href="#top" 
           className="block"
@@ -167,7 +167,7 @@ export default function Footer() {
             <FaChevronUp className="h-5 w-5" />
           </Button>
         </a>
-      </div>
+      </div> */}
     </footer>
   );
 }
