@@ -12,9 +12,11 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-black text-white pt-12 pb-8">
+    <footer className="w-full text-white pt-12 pb-8  bg-gradient-to-r from-teal-700 to-teal-950 
+        dark:from-gray-950 dark:to-gray-900
+        text-white dark:text-gray-100">
       {/* Main footer content */}
-      <div className="container mx-auto px-6 lg:px-8 max-w-7xl">
+      <div className="container mx-auto px-6 lg:px-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
           {/* Logo + Brand */}
           <div>

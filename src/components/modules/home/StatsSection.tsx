@@ -31,9 +31,11 @@ const STATS = [
   },
 ];
 
+
 export default function StatsSection() {
   return (
     <div 
+    
       className="
         bg-gradient-to-r from-teal-700 to-teal-950 
         dark:from-gray-950 dark:to-gray-900

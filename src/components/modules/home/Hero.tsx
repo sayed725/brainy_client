@@ -7,9 +7,7 @@ const THEME_COLOR = "#1cb89e";
 
 export default function Hero() {
   return (
-    <div
-      className="relative w-full overflow-visible bg-gradient-to-r from-teal-700 to-teal-950 dark:from-gray-950 dark:to-gray-900"
-    >
+    <div className="relative w-full lg:mt-10 overflow-visible bg-gradient-to-r from-teal-700 to-teal-950 dark:from-gray-950 dark:to-gray-900">
       {/* Background wave pattern – lowered opacity for dark comfort */}
       <div className="absolute inset-0 opacity-10 dark:opacity-4 pointer-events-none">
         <svg
@@ -18,9 +16,21 @@ export default function Hero() {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M0,50 Q20,45 40,50 T80,50 T100,50 V100 H0 V50" fill="white" className="dark:fill-gray-300/70" />
-          <path d="M0,60 Q25,65 50,60 T100,60 V100 H0 V60" fill="white" className="dark:fill-gray-400/60" />
-          <path d="M0,70 Q30,75 60,70 T100,70 V100 H0 V70" fill="white" className="dark:fill-gray-500/50" />
+          <path
+            d="M0,50 Q20,45 40,50 T80,50 T100,50 V100 H0 V50"
+            fill="white"
+            className="dark:fill-gray-300/70"
+          />
+          <path
+            d="M0,60 Q25,65 50,60 T100,60 V100 H0 V60"
+            fill="white"
+            className="dark:fill-gray-400/60"
+          />
+          <path
+            d="M0,70 Q30,75 60,70 T100,70 V100 H0 V70"
+            fill="white"
+            className="dark:fill-gray-500/50"
+          />
         </svg>
       </div>
 
@@ -47,17 +57,19 @@ export default function Hero() {
         <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Left – Text + Stats + Search */}
           <div className="lg:w-1/2 space-y-2 animate-fade-in-up">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/15 dark:bg-gray-800/40 backdrop-blur-sm text-white dark:text-gray-200 text-sm font-medium border border-white/10 dark:border-gray-700/60">
-              Trusted by 5,000+ Students & Parents
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/15 dark:bg-gray-800/40 backdrop-blur-sm text-white dark:text-gray-200 text-sm font-medium border border-white/10 dark:border-gray-700/60 tracking-wider">
+              Trusted by <span className="text-[#1cb89e] mx-1">5,000+</span>Students & Parents
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white dark:text-gray-50 tracking-tight leading-tight">
               Unlock Your Potential
-              <span className="block">With Brainy Tutors</span>
+              <span className="block">With <span className="text-[#1cb89e]">Brainy Tutors</span></span>
             </h1>
 
             <p className="text-lg lg:text-xl text-white/90 dark:text-gray-300 max-w-2xl font-medium">
-              Connect with expert tutors for personalized 1-on-1 online lessons. From school subjects to exam preparation and skill-building — learn at your own pace, anytime, anywhere.
+              Connect with expert tutors for personalized 1-on-1 online lessons.
+              From school subjects to exam preparation and skill-building —
+              learn at your own pace, anytime, anywhere.
             </p>
 
             {/* Stats – same grid & padding */}
@@ -74,7 +86,9 @@ export default function Hero() {
                   <div className="text-3xl lg:text-4xl font-bold text-white dark:text-teal-300">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-white/80 dark:text-gray-400 mt-1">{stat.label}</div>
+                  <div className="text-sm text-white/80 dark:text-gray-400 mt-1">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -97,63 +111,26 @@ export default function Hero() {
               />
 
               {/* Floating badge bottom-right – same positioning & padding */}
-              <div className="absolute -bottom-0 md:-bottom-0 right-0 md:-right-3 bg-white dark:bg-gray-900 rounded-xl shadow-xl dark:shadow-gray-950/60 p-2 md:p-6 max-w-[240px] md:max-w-[450px] animate-float border border-gray-200/80 dark:border-gray-700">
-                <div className="flex items-center gap-4">
-                  <div
-                    className="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center text-white"
-                    style={{ backgroundColor: THEME_COLOR }}
-                  >
-                    <svg
-                      className="h-7 w-7"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-base">
-                      Expert Tutors
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Qualified & experienced teachers ready to help
-                    </p>
-                  </div>
+              <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-teal-100/20 p-2 sm:p-4 rounded-lg shadow-md backdrop-blur-md border border-white/30">
+                <div className="border-2 rounded-lg border-white/40 p-2 sm:p-4 bg-white/10 backdrop-blur-sm text-white">
+                  <p className="text-2xl md:text-3xl lg:text-4xl font-bold ">
+                    200+
+                  </p>
+                  <p className="font-medium text-sm">
+                    Expert Tutors 
+                  </p>
                 </div>
               </div>
 
-              {/* Floating badge top-left – same positioning */}
-              <div className="hidden sm:block absolute -top-0 md:-top-0 -left-0 md:-left-0 bg-white dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-gray-950/50 p-4 animate-float-delayed border border-gray-200/80 dark:border-gray-700">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white"
-                    style={{ backgroundColor: THEME_COLOR }}
-                  >
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                    Flexible Lessons
-                  </div>
+              {/* Bottom right section */}
+              <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-teal-100/20 p-2 sm:p-4 rounded-lg shadow-md backdrop-blur-md border border-white/30">
+                <div className="border-2 rounded-lg border-white/40 p-2 sm:p-4 bg-white/10 backdrop-blur-sm text-white">
+                  <p className="text-2xl md:text-3xl lg:text-4xl font-bold">
+                    5+
+                  </p>
+                  <p className="font-medium text-sm">
+                    Years Experience
+                  </p>
                 </div>
               </div>
             </div>

@@ -125,7 +125,7 @@ export default function Navbar() {
                 <Button asChild variant="outline">
                   <Link href="/login">Login</Link>
                 </Button>
-                <Button asChild className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-black">
+                <Button asChild className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white">
                   <Link href="/register">Register</Link>
                 </Button>
               </>
@@ -207,7 +207,7 @@ export default function Navbar() {
                             Login
                           </Link>
                         </Button>
-                        <Button asChild className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-black">
+                        <Button asChild className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white">
                           <Link href="/register" onClick={closeMobileMenu}>
                             Register
                           </Link>
