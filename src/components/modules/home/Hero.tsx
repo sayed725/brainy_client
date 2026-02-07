@@ -7,7 +7,7 @@ const THEME_COLOR = "#1cb89e";
 
 export default function Hero() {
   return (
-    <div className="relative w-full overflow-visible bg-gradient-to-r from-teal-700 to-teal-950 dark:from-gray-950 dark:to-gray-900">
+    <div className="relative w-full overflow-visible bg-linear-to-r from-teal-700 to-teal-950 dark:from-gray-950 dark:to-gray-900">
       {/* Background wave pattern – lowered opacity for dark comfort */}
       <div className="absolute inset-0 opacity-10 dark:opacity-4 pointer-events-none">
         <svg

@@ -107,7 +107,7 @@ export default function Navbar() {
                   pathname === item.href
                     ? "text-[#1cb89e]"
                     : "text-foreground/80",
-                  "after:absolute after:bottom-[-6px] after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-[#1cb89e] after:transition-all after:duration-300 hover:after:w-full"
+                  "after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-[#1cb89e] after:transition-all after:duration-300 hover:after:w-full"
                 )}
               >
                 {item.title}
@@ -180,7 +180,7 @@ export default function Navbar() {
                   <Menu className="h-10 w-10" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetContent side="right" className="w-75] sm:w-100">
                 <SheetTitle className="sr-only">Main Navigation Menu</SheetTitle>
                 <SheetHeader className="mb-8">
                   <Link href="/" className="flex items-center gap-3" onClick={closeMobileMenu}>

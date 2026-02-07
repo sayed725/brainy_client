@@ -1,4 +1,3 @@
-// components/ResponsiveFooter.tsx
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="w-full text-white pt-12 pb-3  bg-gradient-to-r from-teal-700 to-teal-950 
+    <footer className="w-full  pt-12 pb-3 bg-linear-to-r from-teal-700 to-teal-950 
         dark:from-gray-950 dark:to-gray-900
         text-white dark:text-gray-100">
       {/* Main footer content */}
@@ -98,15 +97,15 @@ export default function Footer() {
             <h3 className="text-xl font-semibold mb-6">Contact</h3>
             <div className="space-y-4 text-gray-400">
               <p className="flex items-start">
-                <FaMapMarkerAlt className="mr-3 mt-1 text-[#1cb89e] flex-shrink-0" />
+                <FaMapMarkerAlt className="mr-3 mt-1 text-[#1cb89e] shrink-0" />
                 55 Main Street, 2nd block,<br className="sm:hidden" /> New York City
               </p>
               <p className="flex items-center">
-                <FaEnvelope className="mr-3 text-[#1cb89e] flex-shrink-0" />
+                <FaEnvelope className="mr-3 text-[#1cb89e] shrink-0" />
                 abusayedkhan.pro@gmail.com
               </p>
               <p className="flex items-center">
-                <FaPhoneAlt className="mr-3 text-[#1cb89e] flex-shrink-0" />
+                <FaPhoneAlt className="mr-3 text-[#1cb89e] shrink-0" />
                 +880 1627142598
               </p>
             </div>
