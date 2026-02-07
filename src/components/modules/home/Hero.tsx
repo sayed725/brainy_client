@@ -53,7 +53,7 @@ export default function Hero() {
       </div>
 
       {/* Main content – spacing unchanged */}
-      <div className="relative mx-auto w-11/12 max-w-screen-2xl py-16 lg:py-24">
+      <div className="relative mx-auto w-11/12 max-w-screen-2xl py-10 lg:py-16"> 
         <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Left – Text + Stats + Search */}
           <div className="lg:w-1/2 space-y-2 animate-fade-in-up">
@@ -104,7 +104,7 @@ export default function Hero() {
           </div>
 
           {/* Right – Image + Badges */}
-          <div className="lg:w-1/2 relative animate-fade-in pt-10 lg:py-0">
+          <div className="lg:w-1/2 relative animate-fade-in  lg:py-0">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/30 dark:shadow-black/60 border border-white/10 dark:border-gray-700">
               <img
                 src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=2070"

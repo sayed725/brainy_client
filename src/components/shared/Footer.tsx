@@ -81,7 +81,7 @@ export default function Footer() {
                   type="email"
                   placeholder="Your email address"
                   required
-                  className="bg-[#1f1f1f] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#1cb89e] focus:ring-[#c8f21d]/30"
+                  className="bg-white border-gray-700 text-white placeholder:text-gray-500 focus:border-[#1cb89e] focus:ring-[#c8f21d]/30"
                 />
                 <Button 
                   type="submit"
