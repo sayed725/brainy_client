@@ -32,7 +32,7 @@ export default function BecomeTutorSection() {
       <div className="relative container mx-auto px-6 lg:px-0">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left side - Image */}
-          <div className="relative w-full h-80 md:h-96 lg:h-[500px] rounded-xl overflow-hidden order-2 lg:order-1">
+          <div className="relative w-full h-80 md:h-96 lg:h-125 rounded-xl overflow-hidden order-2 lg:order-1">
               <Image
                 src="/tutor.jpg"
                 alt="Confident tutor smiling"
@@ -82,7 +82,7 @@ export default function BecomeTutorSection() {
                 { icon: FaShieldAlt, text: "Get paid securely & on time" },
               ].map((item, idx) => (
                 <li key={idx} className="flex items-center gap-4">
-                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-[#1cb89e]/10 dark:bg-[#1cb89e]/20 flex items-center justify-center">
+                  <div className="shrink-0 h-10 w-10 rounded-full bg-[#1cb89e]/10 dark:bg-[#1cb89e]/20 flex items-center justify-center">
                     <item.icon className="text-[#1cb89e] text-xl" />
                   </div>
                   <span className="text-base md:text-lg">{item.text}</span>
