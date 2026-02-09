@@ -27,7 +27,7 @@ import { authClient } from "@/lib/auth-client";
 
 const menuItems = [
   { title: "Home", href: "/" },
-  { title: "Tutors", href: "/tutor" },
+  { title: "Tutors", href: "/tutors" },
   { title: "Blog", href: "/blog" },
   { title: "Contact", href: "/contact" },
 ];

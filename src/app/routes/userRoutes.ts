@@ -11,16 +11,20 @@ export const userRoutes: Route[] = [
       },
       {
         title: "Student Profile",
-        url: "/student-profile",
-      },
-      {
-        title: "Manage Courses",
-        url: "/manage-courses",
+        url: "/dashboard/student-profile",
       },
       {
         title: "Manage Bookings",
-        url: "/manage-bookings",
-      }
+        url: "/dashboard/manage-bookings",
+      },
+      {
+        title: "Upgrade To Tutor",
+        url: "/dashboard/upgrade-to-tutor",
+      },
+      {
+        title: "ManageCourses",
+        url: "/dashboard/manage-courses",
+      },
     ],
   },
 ];

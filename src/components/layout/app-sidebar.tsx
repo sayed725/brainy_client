@@ -49,7 +49,7 @@ export function AppSidebar({
   return (
     <Sidebar {...props}>
       <SidebarHeader >
-       <div className="flex justify-between items-center py-2">
+       <div className="flex justify-between items-center pb-2 border-b border-gray-200">
          <Link href="/" className="flex items-center gap-3">
             <img
               src="/brainy_logo-removebg-preview.png"
