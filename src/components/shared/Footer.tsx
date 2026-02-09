@@ -15,7 +15,7 @@ export default function Footer() {
         dark:from-gray-950 dark:to-gray-900
         text-white dark:text-gray-100">
       {/* Main footer content */}
-      <div className="container mx-auto px-6 lg:px-0">
+      <div className="container mx-auto w-11/12 lg:w-full px-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
           {/* Logo + Brand */}
           <div>
