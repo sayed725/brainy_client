@@ -31,6 +31,23 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
 
 
 
+   const demoCredentials = {
+    admin: {
+      email: "sayed123@gmail.com",
+      password: "123456",
+    },
+    tutor: {
+      email: "tutor2123@gmail.com",
+      password: "123456",
+    },
+    student: {
+      email: "john123@gmail.com",
+      password: "12345678",
+    }
+  };
+
+
+
     const handleGoogleLogin = async() => {
     const data = authClient.signIn.social({
       provider: "google",
@@ -69,13 +86,51 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   return (
     <Card {...props}>
-      <CardHeader>
+      <CardHeader className="text-center">
         <CardTitle>Login Your Account</CardTitle>
         <CardDescription>
           Enter your information below to Login
         </CardDescription>
       </CardHeader>
       <CardContent>
+
+         <div className="flex items-center my-5 justify-around flex-wrap gap-5 lg:gap-0 ">
+        <Button
+          variant="default"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => {
+            form.setFieldValue("email", demoCredentials.admin.email);
+            form.setFieldValue("password", demoCredentials.admin.password);
+          }}
+        >
+          Admin
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => {
+            form.setFieldValue("email", demoCredentials.student.email);
+            form.setFieldValue("password", demoCredentials.student.password);
+          }}
+        >
+          Student
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => {
+            form.setFieldValue("email", demoCredentials.tutor.email);
+            form.setFieldValue("password", demoCredentials.tutor.password);
+          }}
+        >
+         Tutor
+        </Button>
+      </div>
+
+
         <form
           id="login-form"
           onSubmit={(e) => {
