@@ -11,15 +11,15 @@ export const tutorRoutes: Route[] = [
       },
       {
         title: "Profile",
-        url: "/tutor-profile",
+        url: "/tutor-dashboard/tutor-profile",
       },
       {
         title: "Manage Courses",
-        url: "/manage-courses",
+        url: "/tutor-dashboard/manage-courses",
       },
       {
         title: "Manage Bookings",
-        url: "/manage-bookings",
+        url: "/tutor-dashboard/manage-bookings",
       },
     ],
   },

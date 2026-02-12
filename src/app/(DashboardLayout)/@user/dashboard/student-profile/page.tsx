@@ -139,7 +139,7 @@ export default function StudentProfile() {
         <div className="lg:col-span-2 xl:col-span-1 space-y-6">
           {/* Profile Card */}
           <Card className="border shadow-sm overflow-hidden">
-            <div className="h-28 bg-gradient-to-r from-teal-600 to-teal-800" />
+            <div className="h-28 bg-linear-to-r from-teal-600 to-teal-800" />
             <CardContent className="pt-0 relative pb-8">
               <div className="flex flex-col items-center -mt-20">
                 <div className="relative group">
@@ -298,7 +298,7 @@ export default function StudentProfile() {
             <CardHeader className="pb-3">
              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
                 <div className="flex items-center gap-3">
-                  <Info className="h-5 w-5 text-blue-500" />
+                  <Info className="h-5 w-5 text-teal-500" />
                   <div>
                     <h3 className="font-medium">Complete your profile</h3>
                     <p className="text-sm text-muted-foreground">

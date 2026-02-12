@@ -33,7 +33,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
 
 
     const handleGoogleLogin = async() => {
-    const data = authClient.signIn.social({
+    const data = await authClient.signIn.social({
       provider: "google",
       callbackURL: process.env.FRONTEND_URL || "http://localhost:3000"
     })
@@ -71,7 +71,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   return (
     <Card {...props}>
-      <CardHeader>
+      <CardHeader className="text-center">
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
           Enter your information below to create your account

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -43,6 +43,10 @@ export default function Navbar() {
     refetch,
   } = authClient.useSession();
 
+  // useEffect(() => {
+  //   refetch(); // force refresh when landing here
+  // }, []);
+
   // console.log("Session in Navbar", session, isPending, error);
 
   const isAuthenticated = !!session?.user;
@@ -56,6 +60,8 @@ export default function Navbar() {
     // Optional: refetch(); // if you want to force refresh
     // router.push("/login"); // if you have useRouter
   };
+
+  // console.log("Fresh session after refetch:", session?.user);
 
   const closeMobileMenu = () => setIsOpen(false);
 
@@ -107,7 +113,7 @@ export default function Navbar() {
                   pathname === item.href
                     ? "text-[#1cb89e]"
                     : "text-foreground/80",
-                  "after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-[#1cb89e] after:transition-all after:duration-300 hover:after:w-full"
+                  "after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-[#1cb89e] after:transition-all after:duration-300 hover:after:w-full",
                 )}
               >
                 {item.title}
@@ -122,7 +128,10 @@ export default function Navbar() {
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-10 rounded-full"
+                  >
                     <Avatar className="h-10 w-10">
                       <AvatarFallback className="bg-[#1cb89e] text-black font-bold">
                         {userInitial}
@@ -137,7 +146,13 @@ export default function Navbar() {
                     <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard">
+                    <Link  href={
+                            session?.user?.role === "tutor"
+                              ? "/tutor-dashboard"
+                              : session?.user?.role === "admin"
+                                ? "/admin-dashboard"
+                                : "/dashboard"
+                          }>
                       <LayoutDashboard className="mr-2 h-4 w-4" />
                       Dashboard
                     </Link>
@@ -157,7 +172,10 @@ export default function Navbar() {
                 <Button asChild variant="outline">
                   <Link href="/login">Login</Link>
                 </Button>
-                <Button asChild className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white">
+                <Button
+                  asChild
+                  className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
+                >
                   <Link href="/register">Register</Link>
                 </Button>
               </>
@@ -181,9 +199,15 @@ export default function Navbar() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-75] sm:w-100">
-                <SheetTitle className="sr-only">Main Navigation Menu</SheetTitle>
+                <SheetTitle className="sr-only">
+                  Main Navigation Menu
+                </SheetTitle>
                 <SheetHeader className="mb-8">
-                  <Link href="/" className="flex items-center gap-3" onClick={closeMobileMenu}>
+                  <Link
+                    href="/"
+                    className="flex items-center gap-3"
+                    onClick={closeMobileMenu}
+                  >
                     <img
                       src="/brainy_logo-removebg-preview.png"
                       alt="Brainy Logo"
@@ -203,7 +227,7 @@ export default function Navbar() {
                         "text-lg font-medium transition-colors",
                         pathname === item.href
                           ? "text-[#1cb89e]"
-                          : "text-foreground/80 hover:text-[#1cb89e]"
+                          : "text-foreground/80 hover:text-[#1cb89e]",
                       )}
                     >
                       {item.title}
@@ -214,7 +238,13 @@ export default function Navbar() {
                     {isAuthenticated ? (
                       <>
                         <Link
-                          href="/dashboard"
+                          href={
+                            session?.user?.role === "tutor"
+                              ? "/tutor-dashboard"
+                              : session?.user?.role === "admin"
+                                ? "/admin-dashboard"
+                                : "/dashboard"
+                          }
                           onClick={closeMobileMenu}
                           className="flex items-center gap-3 text-lg"
                         >
