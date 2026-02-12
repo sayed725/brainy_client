@@ -30,9 +30,9 @@ export default async function PopularTutors() {
   const result = await tutorServices.getAllTutors();
 
   // Debug log (remove or conditional in production)
-  if (process.env.NODE_ENV === "development") {
-    console.log("Popular tutors result:", result);
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   console.log("Popular tutors result:", result);
+  // }
 
   // Handle loading/error/no data
   if (!result || result.error || !result.data?.data || result.data.data.length === 0) {

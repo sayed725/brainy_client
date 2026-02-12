@@ -65,7 +65,7 @@ export default function TutorCard({tutor, index}: {tutor: any, index: number}) {
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="h-full w-full bg-gradient-to-br from-primary/10 to-primary/5" />
+                  <div className="h-full w-full bg-linear-to-br from-primary/10 to-primary/5" />
                 )}
                 {/* Availability badge */}
                 <div className="absolute top-3 right-3">
@@ -92,7 +92,7 @@ export default function TutorCard({tutor, index}: {tutor: any, index: number}) {
                 )}
               </div>
 
-              <CardContent className="relative pt-6 pb-3 px-3 h-[260px]">
+              <CardContent className="relative pt-6 pb-3 px-3 h-65">
                <div>
                  {/* Avatar overlapping header */}
                 <div className="absolute -top-12 left-5">
@@ -152,7 +152,7 @@ export default function TutorCard({tutor, index}: {tutor: any, index: number}) {
 
                   {/* Details Button */}
                   <Button size="sm"  asChild className="mt-4 w-full text-sm font-medium bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white">
-                    <Link href={`/tutor/${tutor.id}`}>
+                    <Link href={`/tutors/${tutor.id}`}>
                       View Details
                     </Link>
                   </Button>
