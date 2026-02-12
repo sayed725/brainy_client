@@ -9,7 +9,7 @@ import { DollarSign, Clock, Star, User, Calendar, Mail } from "lucide-react";
 import { tutorServices } from "@/services/tutor.service";
 
 // Optional: Type for better safety (you can expand it)
-interface Tutor {
+export interface Tutor {
   id: string;
   title: string;
   bio: string;
