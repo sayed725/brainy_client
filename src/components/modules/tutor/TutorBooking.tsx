@@ -3,9 +3,15 @@
 import { useState } from "react";
 import { CalendarDays, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import { format, differenceInCalendarDays } from "date-fns";
+import { toast } from "sonner";
 import { Tutor } from "@/app/(CommonLayout)/tutors/[id]/page";
+import { authClient } from "@/lib/auth-client";
 
-// Time slot mapping with labels, ranges, and descriptions
+// Time slot mapping (unchanged)
 const timeSlotInfo = {
   MORNING: {
     label: "Morning",
@@ -37,12 +43,71 @@ interface TutorBookingProps {
 
 export function TutorBooking({ tutor }: TutorBookingProps) {
   const [selectedSlot, setSelectedSlot] = useState<TimeSlotKey | null>(null);
+    const { data: session, isPending, refetch } = authClient.useSession();
   const [booked, setBooked] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const user = session?.user;
+  // Modal form state
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+
+  // Calculate number of days (inclusive) and total price
+  const calculatePrice = () => {
+    if (!startDate || !endDate || endDate < startDate) return 0;
+
+    // differenceInCalendarDays counts full days between dates (end - start)
+    // Add 1 to make it inclusive (same day = 1 day)
+    const days = differenceInCalendarDays(endDate, startDate) + 1;
+
+    if (days <= 0) return 0;
+
+    // Each day = 4 hours × rate
+    return days * 4 * tutor.rate;
+  };
+
+  const totalPrice = calculatePrice();
 
   function handleBook() {
     if (!selectedSlot) return;
+    setIsModalOpen(true);
+  }
+
+  async function confirmBooking() {
+    if (!startDate || !endDate) {
+      toast.error("Please select both start and end dates");
+      return;
+    }
+
+    if (endDate < startDate) {
+      toast.error("End date must be on or after start date");
+      return;
+    }
+
+    if (totalPrice === 0) {
+      toast.error("Booking must cover at least 1 day");
+      return;
+    }
+
+    // In real app: call your booking API here
+    console.log("Booking submitted:", {
+      tutorId: tutor.id,
+      userId: user?.id,
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd"),
+      totalDays: differenceInCalendarDays(endDate, startDate) + 1,
+      totalPrice,
+      timeSlot: selectedSlot,
+    });
+
+    toast.success("Booking request sent successfully!");
     setBooked(true);
-    // In real app: call booking API here
+    setIsModalOpen(false);
+
+    // Reset form
+    setStartDate(undefined);
+    setEndDate(undefined);
   }
 
   if (booked) {
@@ -57,10 +122,7 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
           <span className="font-medium text-foreground">
             {timeSlotInfo[selectedSlot!]?.label || selectedSlot}
           </span>
-          {" "}
-          <span className="text-xs text-muted-foreground">
-            ({timeSlotInfo[selectedSlot!]?.timeRange || "N/A"})
-          </span>.
+          .
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
           A confirmation will be sent to your email.
@@ -100,7 +162,7 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
                 onClick={() =>
                   setSelectedSlot(slot === selectedSlot ? null : (slot as TimeSlotKey))
                 }
-                title={info?.description} // tooltip on hover
+                title={info?.description}
                 className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                   isSelected
                     ? "border-[#1cb89e] bg-[#1cb89e] text-white"
@@ -135,6 +197,65 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
             ? `Book for ${timeSlotInfo[selectedSlot]?.label || selectedSlot}`
             : "Select a time slot to book"}
       </Button>
+
+      {/* Booking Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Book Session with {tutor.user.name}</DialogTitle>
+          </DialogHeader>
+
+          <div className="grid gap-6 py-4">
+            {/* Start Date */}
+            <div className="grid gap-2">
+              <Label>Select Start Date</Label>
+              <Calendar
+                mode="single"
+                selected={startDate}
+                onSelect={setStartDate}
+                disabled={(date) => date < new Date()}
+                initialFocus
+              />
+            </div>
+
+            {/* End Date */}
+            <div className="grid gap-2">
+              <Label>Select End Date</Label>
+              <Calendar
+                mode="single"
+                selected={endDate}
+                onSelect={setEndDate}
+                disabled={(date) => date < (startDate || new Date())}
+                initialFocus
+              />
+            </div>
+
+            {/* Price Calculation - day-based (4 hours per day) */}
+            {startDate && endDate && (
+              <div className="text-sm font-medium text-center mt-2">
+                Estimated Price:{" "}
+                <span className="text-[#1cb89e] font-semibold">${totalPrice}</span>
+                <span className="text-xs text-muted-foreground ml-2">
+                  ({differenceInCalendarDays(endDate, startDate) + 1} day(s) × 4 hours × ${tutor.rate}/hr)
+                </span>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              onClick={confirmBooking}
+              disabled={!startDate || !endDate || totalPrice <= 0}
+              className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
+            >
+              Confirm Booking ${totalPrice}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
