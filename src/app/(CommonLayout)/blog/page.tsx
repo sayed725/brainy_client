@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion"; 
 import BlogCard from "@/components/modules/blog/BlogCard";
 import Sidebar from "@/components/modules/blog/SideBar";
+import PageHeader from "@/components/shared/PageHeader";
 
 
 
@@ -100,17 +101,7 @@ const blogData = [
           animate="visible"
         >
            {/* Header */}
-        <div className="text-center mb-10">
-          <p className="text-sm uppercase tracking-wider text-teal-600 dark:text-teal-400 font-medium">
-            All Blog
-          </p>
-          <h2 className="mt-3 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
-            Explore Our Latest Blogs
-          </h2>
-          <div className="mt-4 flex justify-center">
-            <div className="h-1 w-24 bg-teal-500/70 rounded-full"></div>
-          </div>
-        </div>
+           <PageHeader title="Explore Our Latest Blogs" subtitle=" All Blog"/>
         </motion.div>
 
         <motion.div
