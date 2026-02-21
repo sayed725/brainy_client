@@ -54,7 +54,7 @@ export default async function PopularTutors() {
   const popularTutors: Tutor[] = result.data.data;
 
   return (
-    <section className="py-10 md:py-24 bg-gray-50 dark:bg-gray-950">
+    <section className="py-10 md:py-24 bg-gray-100 dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-0">
         {/* Header */}
         <PageHeader title="Pick A Tutor To Get Started" subtitle="Popular Tutors"/>

@@ -10,6 +10,7 @@ import { format, differenceInCalendarDays } from "date-fns";
 import { toast } from "sonner";
 import { Tutor } from "@/app/(CommonLayout)/tutors/[id]/page";
 import { authClient } from "@/lib/auth-client";
+import { addBooking } from "@/actions/booking.action";
 
 // Time slot mapping (unchanged)
 const timeSlotInfo = {
@@ -74,41 +75,74 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
     setIsModalOpen(true);
   }
 
-  async function confirmBooking() {
-    if (!startDate || !endDate) {
-      toast.error("Please select both start and end dates");
+async function confirmBooking() {
+  // ── Validation ────────────────────────────────────────────────
+  if (!startDate || !endDate) {
+    toast.error("Please select both start and end dates");
+    return;
+  }
+
+  if (endDate < startDate) {
+    toast.error("End date must be on or after start date");
+    return;
+  }
+
+  if (totalPrice <= 0) {
+    toast.error("Booking must cover at least 1 day");
+    return;
+  }
+
+  const toastId = toast.loading("Sending booking request...");
+
+  // ── Prepare payload ───────────────────────────────────────────
+  const bookingData = {
+   startTime: startDate.toISOString(),
+    endTime:   endDate.toISOString(),
+    totalPrice,
+    tutorId: tutor.id,
+    userId: user?.id,
+  };
+
+  console.log("Sending to API:", bookingData);
+  
+  try {
+    const res = await addBooking(bookingData);
+
+    console.log("API Response:", res);
+  
+
+    // Handle API response styles (adjust according to your actual API)
+   if (res && 'error' in res && res.error) {
+      toast.error(res.error.message || "Booking failed", { id: toastId });
       return;
     }
 
-    if (endDate < startDate) {
-      toast.error("End date must be on or after start date");
-      return;
-    }
-
-    if (totalPrice === 0) {
-      toast.error("Booking must cover at least 1 day");
-      return;
-    }
-
-    // In real app: call your booking API here
-    console.log("Booking submitted:", {
-      tutorId: tutor.id,
-      userId: user?.id,
-      startDate: format(startDate, "yyyy-MM-dd"),
-      endDate: format(endDate, "yyyy-MM-dd"),
-      totalDays: differenceInCalendarDays(endDate, startDate) + 1,
-      totalPrice,
-      timeSlot: selectedSlot,
-    });
-
+    // ── Success path ─────────────────────────────────────────────
+    toast.dismiss(toastId);               // remove loading
     toast.success("Booking request sent successfully!");
+
     setBooked(true);
     setIsModalOpen(false);
 
     // Reset form
     setStartDate(undefined);
     setEndDate(undefined);
+
+    // Optional: navigate, refresh data, etc.
+    // navigate("/bookings");  // ← uncomment if desired
+    // await refetchTutor();    // if using react-query / swr
+
+  } catch (err: any) {
+    // ── Error path ───────────────────────────────────────────────
+    const message =
+      err.message ||
+      err?.response?.data?.message ||
+      "Something went wrong. Please try again.";
+
+    toast.error(message, { id: toastId });
+    // loading toast is automatically replaced by error toast
   }
+}
 
   if (booked) {
     return (
@@ -127,7 +161,7 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
         <p className="mt-1 text-sm text-muted-foreground">
           A confirmation will be sent to your email.
         </p>
-        <Button
+        {/* <Button
           variant="outline"
           className="mt-6 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
           onClick={() => {
@@ -136,7 +170,7 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
           }}
         >
           Book Another Slot
-        </Button>
+        </Button> */}
       </div>
     );
   }
