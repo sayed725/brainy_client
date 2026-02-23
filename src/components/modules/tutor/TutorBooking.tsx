@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CalendarDays, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
@@ -10,7 +10,8 @@ import { format, differenceInCalendarDays } from "date-fns";
 import { toast } from "sonner";
 import { Tutor } from "@/app/(CommonLayout)/tutors/[id]/page";
 import { authClient } from "@/lib/auth-client";
-import { addBooking } from "@/actions/booking.action";
+import { addBooking, getBookings } from "@/actions/booking.action";
+
 
 // Time slot mapping (unchanged)
 const timeSlotInfo = {
@@ -47,9 +48,24 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
     const { data: session, isPending, refetch } = authClient.useSession();
   const [booked, setBooked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-
   const user = session?.user;
+
+  // console.log("TutorBooking Props:", { tutor, session, isPending });
+
+
+   useEffect(() => {
+    async function load() {
+      const { data, error } = await getBookings(user?.id! as string);
+        console.log("User Bookings:", data, "Error:", error);
+    }
+    load();
+  }, []);
+
+  
+
+
+
+  // console.log("Current User:", user);
   // Modal form state
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);

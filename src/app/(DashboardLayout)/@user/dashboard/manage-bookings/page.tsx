@@ -1,7 +1,377 @@
+"use client";
+
+import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
+import moment from "moment";
+import { Check, Cross, MoreVertical, Trash, User } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { FaCircle } from "react-icons/fa";
+import { MdPendingActions } from "react-icons/md";
+import { authClient } from "@/lib/auth-client";
+import { useEffect, useState, useTransition } from "react";
+import {
+  getBookings,
+  updateBookingStatus,
+  deleteBooking,
+} from "@/actions/booking.action"; // ← import your actions
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+
+interface Booking {
+  id: string;
+  tutor?: { title: string; poster: string | null } | null;
+  totalPrice: number;
+  startTime: string;
+  endTime: string;
+  createdAt: string;
+  status: string; // "PENDING" | "CONFIRMED" | "CANCELLED"
+}
+
 export default function ManageBookings() {
-    return (
-        <div>
-            <h1> This is ManageBookings </h1>
-        </div>
+  const { data: session, isPending: isSessionLoading } =
+    authClient.useSession();
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const userId = session?.user?.id;
+
+  // Load bookings
+ // reusable refresh function
+const refreshBookings = async () => {
+  if (!userId) return;
+
+//   setLoading(true);
+//   setError(null);
+
+  try {
+    const result = await getBookings(userId as string);
+    if (result.error) {
+      throw new Error(result.error.message || "Failed to load bookings");
+    }
+    setBookings(result.data?.data || []);
+  } catch (err: any) {
+    setError(err.message || "Failed to refresh bookings");
+    toast.error("Could not load bookings");
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Initial load
+useEffect(() => {
+  if (userId) {
+    refreshBookings();
+  }
+}, [userId]);
+
+// Status change handler
+const handleStatusChange = async (
+  bookingId: string,
+  newStatus: "CONFIRMED" | "PENDING" | "CANCELLED",
+) => {
+  const actionVerb = {
+    CONFIRMED: "Confirming",
+    PENDING: "Restoring to pending",
+    CANCELLED: "Cancelling",
+  }[newStatus];
+
+  const pastVerb = {
+    CONFIRMED: "confirmed",
+    PENDING: "set to pending",
+    CANCELLED: "cancelled",
+  }[newStatus];
+
+  try {
+    await toast.promise(
+      updateBookingStatus(bookingId, newStatus),
+      {
+        loading: `${actionVerb} booking...`,
+        success: <b>Booking successfully {pastVerb}!</b>,
+        error: <b>Failed to update booking status.</b>,
+      }
     );
+
+    await refreshBookings();
+
+  } catch (err) {
+    console.error(err);
+    // toast.promise already handled error toast
+    await refreshBookings(); // keep UI in sync
+  }
+};
+
+  // Handle delete with confirmation
+  const handleDelete = (bookingId: string) => {
+    startTransition(async () => {
+      const originalBookings = [...bookings];
+
+      // Optimistic remove
+      setBookings((prev) => prev.filter((b) => b.id !== bookingId));
+
+      try {
+        const result = await deleteBooking(bookingId);
+        // if (result.error) throw new Error(result.error.message);
+        toast.success("Booking deleted");
+      } catch (err: any) {
+        toast.error(err.message || "Failed to delete booking");
+        setBookings(originalBookings); // rollback
+      }
+    });
+  };
+
+//   if (isSessionLoading || loading) {
+//     return (
+//       <div className="flex items-center justify-center min-h-[50vh]">
+//         <div className="text-center space-y-3">
+//           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+//           <p className="text-sm text-muted-foreground">
+//             Loading your bookings...
+//           </p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="text-center py-12 text-destructive">
+//         <p>{error}</p>
+//         <button
+//           onClick={() => window.location.reload()}
+//           className="mt-4 text-sm underline"
+//         >
+//           Try again
+//         </button>
+//       </div>
+//     );
+//   }
+
+  const isTutor = session?.user?.role === "TUTOR"; // adjust to your actual field
+
+  return (
+    <div className="px-0 lg:px-6 pb-16 ">
+      <DashboardPagesHeader
+        title={isTutor ? "Manage Booking Requests" : "My Bookings"}
+        subtitle={
+          isTutor
+            ? "Review and respond to student booking requests"
+            : "View and manage your tutoring sessions"
+        }
+        icon={User}
+      />
+
+      <div className="mt-6 border rounded-lg overflow-hidden bg-card">
+        <Table>
+          <TableCaption>
+            {bookings.length === 0
+              ? "No bookings found"
+              : isTutor
+                ? "Incoming requests"
+                : "Your bookings"}
+          </TableCaption>
+
+          <TableHeader>
+            <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableHead className="w-12">#</TableHead>
+              <TableHead className="text-xs">Image</TableHead>
+              <TableHead className="text-xs">
+                {isTutor ? "Student" : "Tutor"}
+              </TableHead>
+              <TableHead className="text-xs">Price</TableHead>
+              <TableHead className="text-xs">Start Time</TableHead>
+              <TableHead className="text-xs">End Time</TableHead>
+              <TableHead className="text-xs">Created</TableHead>
+              <TableHead className="text-xs">Status</TableHead>
+              <TableHead className="text-center text-xs pr-6">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+
+        <TableBody>
+          {loading ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <TableRow key={i}>
+                {Array.from({ length: 11 }).map((_, j) => (
+                  <TableCell key={j}>
+                    <div className="skeleton h-8 rounded w-full"></div>
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : bookings?.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={9}
+                  className="h-48 text-center text-muted-foreground"
+                >
+                  No booking requests found
+                </TableCell>
+              </TableRow>
+            ) : (
+              bookings.map((booking, index) => {
+               
+                return (
+                  <TableRow key={booking.id} className="hover:bg-muted/40">
+                    <TableCell className="text-muted-foreground">
+                      {index + 1}
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="h-10 w-10 rounded-full overflow-hidden border bg-muted">
+                        <img
+                          src={booking.tutor?.poster ?? "/default-tutor.jpg"}
+                          alt={booking.tutor?.title ?? "Tutor"}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="font-medium max-w-60 truncate">
+                      {booking.tutor?.title || "—"}
+                    </TableCell>
+
+                    <TableCell className="font-medium">
+                      {booking.totalPrice > 0 ? `$${booking.totalPrice}` : "—"}
+                    </TableCell>
+
+                    <TableCell className="whitespace-nowrap">
+                      {booking.startTime
+                        ? moment(booking.startTime).format(
+                            "MMM D, YYYY • h:mm A",
+                          )
+                        : "—"}
+                    </TableCell>
+
+                    <TableCell className="whitespace-nowrap">
+                      {booking.endTime
+                        ? moment(booking.endTime).format("MMM D, YYYY • h:mm A")
+                        : "—"}
+                    </TableCell>
+
+                    <TableCell className="text-muted-foreground text-sm">
+                      {booking.createdAt
+                        ? moment(booking.createdAt).fromNow()
+                        : "—"}
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-block h-2.5 w-2.5 rounded-full ${
+                            booking.status === "PENDING"
+                              ? "bg-yellow-500"
+                              : booking.status === "CONFIRMED"
+                                ? "bg-green-600"
+                                : "bg-red-500"
+                          }`}
+                        />
+                        <span className="capitalize text-sm font-medium">
+                          {booking.status?.toLowerCase() || "unknown"}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="flex justify-center">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <div className="bg-base-200 p-2 mx-0 rounded border border-border w-fit ">
+                            <MoreVertical className="cursor-pointer text-gray-700" />
+                          </div>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent align="end">
+                          {booking.status === "PENDING" && (
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleStatusChange(booking.id, "CANCELLED")
+                              }
+                              className="text-green-700 cursor-pointer"
+                            >
+                              <Check className="mr-2 h-4 w-4" />
+                              Cancel Booking
+                            </DropdownMenuItem>
+                          )}
+
+                          {booking.status === "CANCELLED" && (
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleStatusChange(booking.id, "PENDING")
+                              }
+                              className="text-green-700 cursor-pointer"
+                            >
+                              <Check className="mr-2 h-4 w-4" />
+                              Make Pending
+                            </DropdownMenuItem>
+                          )}
+
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem
+                                className="text-red-600 focus:text-red-600 cursor-pointer"
+                                onSelect={(e) => e.preventDefault()}
+                              >
+                                <Trash className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Are you sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. The booking will
+                                  be permanently deleted.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(booking.id)}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
 }

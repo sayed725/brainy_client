@@ -9,6 +9,7 @@ import { DollarSign, Clock, Star, User, Calendar, Mail, GraduationCap, ArrowLeft
 import { tutorServices } from "@/services/tutor.service";
 import Link from "next/link";
 import { TutorBooking } from "@/components/modules/tutor/TutorBooking";
+import { bookingServices } from "@/services/booking.service";
 
 // Optional: Type for better safety (you can expand it)
 export interface Tutor {
@@ -79,6 +80,14 @@ export default async function TutorDetailsPage({
   const { id } = await params;
 
   const result = await tutorServices.getSingleTutor(id);
+
+  // const bookingResult = await bookingServices.getBookingsByTutorId(id);
+
+  // console.log("Booking Result for Tutor ID", id, ":", bookingResult); 
+
+
+
+  
 
 
   if (result.error || !result.data) {
