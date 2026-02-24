@@ -54,12 +54,19 @@ export const bookingServices = {
           headers: {
             "Content-Type": "application/json",
             // Include cookies if your backend relies on them for auth
-             Cookie: cookieStore.toString(),
+            Cookie: cookieStore.toString(),
           },
           credentials: "include", // Ensure cookies are sent
           cache: "no-store", // Always fetch fresh data
         },
       );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        return {
+          error: { message: errorData?.message || "Failed to get bookings" },
+        };
+      }
 
       const data = await res.json();
 
@@ -97,11 +104,28 @@ export const bookingServices = {
   // },
 
   getBookingsByTutorId: async (id: string) => {
-    
+     const cookieStore = await cookies();
     try {
       const res = await fetch(
         `${process.env.BACKEND_URL}/api/v1/booking/byTutorId/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Include cookies if your backend relies on them for auth
+            Cookie: cookieStore.toString(),
+          },
+          credentials: "include", // Ensure cookies are sent
+          cache: "no-store", // Always fetch fresh data
+        },
       );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        return {
+          error: { message: errorData?.message || "Failed to get bookings" },
+        };
+      }
 
       const data = await res.json();
 
@@ -121,16 +145,52 @@ export const bookingServices = {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-             Cookie: cookieStore.toString(),
+            Cookie: cookieStore.toString(),
           },
           credentials: "include", // Ensure cookies are sent
           cache: "no-store", // Always fetch fresh data
           body: JSON.stringify({ status: status }),
         },
       );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        return {
+          error: { message: errorData?.message || "Failed to update status" },
+        };
+      }
+
+    const data = await res.json();
+
+      return { data: data, error: null };
+    } catch (err: any) {
+      return { error: { message: err.message || "Network or server error" } };
+    }
+  },
+
+  deleteBooking: async (bookingId: string) => {
+    const cookieStore = await cookies();
+    try {
+      const res = await fetch(
+        `${process.env.BACKEND_URL}/api/v1/booking/${bookingId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: cookieStore.toString(),
+          },
+          credentials: "include", // Ensure cookies are sent
+          cache: "no-store", // Always fetch fresh data
+        },
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        return { error: { message: errorData?.message || "Failed to delete" } };
+      }
       const data = await res.json();
 
-      return data;
+      return { data: data, error: null };
     } catch (err: any) {
       return { error: { message: err.message || "Network or server error" } };
     }

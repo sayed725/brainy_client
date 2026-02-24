@@ -9,3 +9,13 @@ export const addTutor = async (tutorData: TutorUpdateInput) => {
    updateTag("createTutor")
   return result; // { data, error }
 };
+
+
+export const getTutorByUserId = async (id: string) => {
+  
+  const result =  await tutorServices.getTutorByUserid(id);
+  // updateTag("getBookings")
+  return result; // { data, error }
+
+};
+

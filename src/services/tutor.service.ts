@@ -98,6 +98,42 @@ export const tutorServices = {
       // console.error(err);
       return { data: null, error: { message: "Something Went Wrong" } };
     }
-  }
+  },
+
+  getTutorByUserid: async (id: string) => {
+     const cookieStore = await cookies();
+    try {
+      const res = await fetch(
+        `${process.env.BACKEND_URL}/api/v1/tutor/byUserId/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Include cookies if your backend relies on them for auth
+            Cookie: cookieStore.toString(),
+          },
+          credentials: "include", // Ensure cookies are sent
+          cache: "no-store", // Always fetch fresh data
+        },
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        return {
+          error: { message: errorData?.message || "Failed to get tutor" },
+        };
+      }
+
+      const data = await res.json();
+
+      return { data: data, error: null };
+    } catch (err) {
+      console.error(err);
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+
+
 
 };

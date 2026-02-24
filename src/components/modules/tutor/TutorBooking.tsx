@@ -10,7 +10,7 @@ import { format, differenceInCalendarDays } from "date-fns";
 import { toast } from "sonner";
 import { Tutor } from "@/app/(CommonLayout)/tutors/[id]/page";
 import { authClient } from "@/lib/auth-client";
-import { addBooking, getBookings } from "@/actions/booking.action";
+import { addBooking } from "@/actions/booking.action";
 
 
 // Time slot mapping (unchanged)
@@ -53,13 +53,13 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
   // console.log("TutorBooking Props:", { tutor, session, isPending });
 
 
-   useEffect(() => {
-    async function load() {
-      const { data, error } = await getBookings(user?.id! as string);
-        console.log("User Bookings:", data, "Error:", error);
-    }
-    load();
-  }, []);
+  //  useEffect(() => {
+  //   async function load() {
+  //     const { data, error } = await getBookings(user?.id! as string);
+  //       console.log("User Bookings:", data, "Error:", error);
+  //   }
+  //   load();
+  // }, []);
 
   
 

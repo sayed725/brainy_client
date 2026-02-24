@@ -23,9 +23,10 @@ import { MdPendingActions } from "react-icons/md";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useState, useTransition } from "react";
 import {
-  getBookings,
+  
   updateBookingStatus,
   deleteBooking,
+  getBookingsByUserId,
 } from "@/actions/booking.action"; // ← import your actions
 
 import {
@@ -57,7 +58,6 @@ export default function ManageBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
 
   const userId = session?.user?.id;
 
@@ -70,7 +70,7 @@ const refreshBookings = async () => {
 //   setError(null);
 
   try {
-    const result = await getBookings(userId as string);
+    const result = await getBookingsByUserId(userId as string);
     if (result.error) {
       throw new Error(result.error.message || "Failed to load bookings");
     }
@@ -113,37 +113,58 @@ const handleStatusChange = async (
       {
         loading: `${actionVerb} booking...`,
         success: <b>Booking successfully {pastVerb}!</b>,
-        error: <b>Failed to update booking status.</b>,
+        error: (err) => <b>{err.message || `Failed to update booking status`}</b>,
       }
     );
 
     await refreshBookings();
 
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     // toast.promise already handled error toast
     await refreshBookings(); // keep UI in sync
   }
 };
 
-  // Handle delete with confirmation
-  const handleDelete = (bookingId: string) => {
-    startTransition(async () => {
-      const originalBookings = [...bookings];
-
-      // Optimistic remove
-      setBookings((prev) => prev.filter((b) => b.id !== bookingId));
-
-      try {
-        const result = await deleteBooking(bookingId);
-        // if (result.error) throw new Error(result.error.message);
-        toast.success("Booking deleted");
-      } catch (err: any) {
-        toast.error(err.message || "Failed to delete booking");
-        setBookings(originalBookings); // rollback
+const handleDelete = async (bookingId: string) => {
+  try {
+    await toast.promise(
+      deleteBooking(bookingId),
+      {
+        loading: "Deleting booking...",
+        success: <b>Booking successfully deleted!</b>,
+        error: (err) => <b>{err.message || "Failed to delete booking"}</b>,
       }
-    });
-  };
+    );
+    
+    await refreshBookings();
+  } catch (error) {
+    // toast.promise already showed the error toast
+    await refreshBookings(); // keep UI in sync even on failure
+  }
+};
+
+  // Handle delete with confirmation
+//   const handleDelete = async(bookingId: string) => {
+      
+//    try {
+//      await toast.promise(
+//         deleteBooking(bookingId),
+//         {
+//           loading: "Deleting booking...",
+//           success: <b>Booking successfully deleted!</b>,
+//           error: <b>Failed to delete booking.</b>,
+//         }
+//       );
+//      await refreshBookings();
+    
+//    } catch (error) {
+//     //  console.error(error);
+//     // toast.promise already handled error toast
+//     await refreshBookings(); // keep UI in sync
+//    }
+
+//   };
 
 //   if (isSessionLoading || loading) {
 //     return (
@@ -186,7 +207,7 @@ const handleStatusChange = async (
         icon={User}
       />
 
-      <div className="mt-6 border rounded-lg overflow-hidden bg-card">
+      <div className="mt-6 overflow-hidden bg-card">
         <Table>
           <TableCaption>
             {bookings.length === 0
@@ -218,9 +239,9 @@ const handleStatusChange = async (
           {loading ? (
             Array.from({ length: 10 }).map((_, i) => (
               <TableRow key={i}>
-                {Array.from({ length: 11 }).map((_, j) => (
+                {Array.from({ length: 9 }).map((_, j) => (
                   <TableCell key={j}>
-                    <div className="skeleton h-8 rounded w-full"></div>
+                    <div className="bg-muted animate-pulse h-8 rounded"></div>
                   </TableCell>
                 ))}
               </TableRow>
@@ -302,7 +323,7 @@ const handleStatusChange = async (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <div className="bg-base-200 p-2 mx-0 rounded border border-border w-fit ">
-                            <MoreVertical className="cursor-pointer text-gray-700" />
+                            <MoreVertical className="cursor-pointer text-gray-700 dark:text-white" />
                           </div>
                         </DropdownMenuTrigger>
 
@@ -312,9 +333,9 @@ const handleStatusChange = async (
                               onClick={() =>
                                 handleStatusChange(booking.id, "CANCELLED")
                               }
-                              className="text-green-700 cursor-pointer"
+                              className="text-green-700 cursor-pointer dark:text-green-500"
                             >
-                              <Check className="mr-2 h-4 w-4" />
+                              <Check className="mr-2 h-4 w-4 dark:text-white" />
                               Cancel Booking
                             </DropdownMenuItem>
                           )}
@@ -324,7 +345,7 @@ const handleStatusChange = async (
                               onClick={() =>
                                 handleStatusChange(booking.id, "PENDING")
                               }
-                              className="text-green-700 cursor-pointer"
+                              className="text-yellow-500 cursor-pointer dark:text-yellow-500"
                             >
                               <Check className="mr-2 h-4 w-4" />
                               Make Pending

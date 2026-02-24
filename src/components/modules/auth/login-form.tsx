@@ -18,6 +18,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+
+
+import { useRouter } from 'next/navigation';
 import { toast } from "sonner";
 
 import * as z from "zod";
@@ -28,6 +31,8 @@ const formSchema = z.object({
 });
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+
+ const router = useRouter();
 
 
 
@@ -78,6 +83,9 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         }
 
         toast.success("User Login Successfully", { id: toastId });
+         
+        router.push('/');
+
       } catch (err) {
         toast.error("Something went wrong, please try again.", { id: toastId });
       }

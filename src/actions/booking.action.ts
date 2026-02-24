@@ -9,9 +9,16 @@ export const addBooking = async (bookingData: any) => {
   return result; // { data, error }
 };
 
-export const getBookings = async (id: string) => {
+export const getBookingsByUserId = async (id: string) => {
   
   const result =  await bookingServices.getBookingsByUserId(id);
+  updateTag("getBookings")
+  return result; // { data, error }
+
+};
+export const getBookingsByTutorId = async (id: string) => {
+  
+  const result =  await bookingServices.getBookingsByTutorId(id);
   updateTag("getBookings")
   return result; // { data, error }
 
@@ -22,17 +29,20 @@ export const getBookings = async (id: string) => {
 export async function updateBookingStatus(bookingId: string, status: string) {
   
    const result=  await bookingServices.updateBookingStatus(bookingId, status)
+     if (result?.error) {
+    throw new Error(result.error.message || "Failed to delete booking");
+  }
    updateTag("getBookings")
    return result;
  
 }
 
 export async function deleteBooking(bookingId: string) {
-  // try {
-  //   await bookingServices.deleteBooking(bookingId);
-  //   revalidatePath("/dashboard/bookings");
-  //   return { error: null };
-  // } catch (error: any) {
-  //   return { error: { message: error.message } };
-  // }
+    const result=  await bookingServices.deleteBooking(bookingId)
+    if (result?.error) {
+    throw new Error(result.error.message || "Failed to delete booking");
+  }
+    updateTag("getBookings")
+    return result;
 }
+
