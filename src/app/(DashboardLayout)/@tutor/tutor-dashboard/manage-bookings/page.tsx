@@ -30,7 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { deleteBooking, getBookingsByTutorId, updateBookingStatus } from "@/actions/booking.action";
+import { deleteBooking, getAllBookings, getBookingsByTutorId, updateBookingStatus } from "@/actions/booking.action";
 import { getTutorByUserId } from "@/actions/tutor.action";
 import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 import { authClient } from "@/lib/auth-client";
@@ -84,74 +84,42 @@ export default function ManageBookings() {
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
 
-  const [tutor, setTutor] = useState<Tutor | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
 
   const userId = session?.user?.id;
 
-  const refreshTutor = async () => {
-    if (!userId) return;
+  
 
-    setLoading(true);
-    setError(null);
 
-    try {
-      const result = await getTutorByUserId(userId);
-
-      if (result.error) {
-        throw new Error(result.error.message || "Failed to load tutor profile");
-      }
-
-      // Assuming result.data is the tutor object (adjust if different)
-      setTutor(result.data.data ?? null);
-    } catch (err: any) {
-      const message = err.message || "Failed to load tutor information";
-      setError(message);
-      console.error("Error loading tutor:", err);
-      // toast.error(message); // ← uncomment if you have toast
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Only run when userId changes (and exists)
-  useEffect(() => {
-    if (userId) {
-      refreshTutor();
-    } else {
-      setLoading(false);
-      setTutor(null);
-    }
-  }, [userId]);
-
-  const refreshBookings = async () => {
-    if (!userId) return;
-
-    //   setLoading(true);
-    //   setError(null);
-
-    try {
-      const result = await getBookingsByTutorId(tutor?.id as string);
-      if (result.error) {
-        throw new Error(result.error.message || "Failed to load bookings");
-      }
-      setBookings(result.data?.data || []);
-    } catch (err: any) {
-      setError(err.message || "Failed to refresh bookings");
-      toast.error("Could not load bookings");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Initial load
-  useEffect(() => {
-    if (tutor?.id) {
-      refreshBookings();
-    }
-  }, [tutor?.id]);
+     const refreshBookings = async () => {
+       if (!userId) return;
+     
+     //   setLoading(true);
+     //   setError(null);
+     
+       try {
+         const result = await getAllBookings();
+         if (result.error) {
+           throw new Error(result.error.message || "Failed to load bookings");
+         }
+         setBookings(result.data?.data || []);
+       } catch (err: any) {
+         setError(err.message || "Failed to refresh bookings");
+        //  toast.error("Could not load bookings");
+       } finally {
+         setLoading(false);
+       }
+     };
+     
+     // Initial load
+     useEffect(() => {
+       if (userId) {
+         refreshBookings();
+       }
+     }, [userId])
 
 //   console.log("Tutor data:", tutor?.id);
 //   console.log("Bookings data:", bookings);
@@ -211,64 +179,7 @@ const handleDelete = async (bookingId: string) => {
 };
 
 
-
-
-
-  // ────────────────────────────────────────────────
-  // Loading / error / no tutor states
-  // ────────────────────────────────────────────────
-
-  if (isSessionLoading || loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading tutor profile...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <h2 className="text-2xl font-semibold text-destructive mb-2">
-            Error
-          </h2>
-          <p className="text-muted-foreground mb-6">{error}</p>
-          <button
-            onClick={refreshTutor}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!tutor) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">
-            No Tutor Profile Found
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            It looks like you haven't created a tutor profile yet.
-          </p>
-          {/* Add link/button to create tutor profile */}
-          <a
-            href="/tutor/setup"
-            className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-          >
-            Create Tutor Profile
-          </a>
-        </div>
-      </div>
-    );
-  }
+ 
 
   return (
     <div className="px-0 lg:px-6 pb-16">
@@ -314,7 +225,7 @@ const handleDelete = async (bookingId: string) => {
                 ))}
               </TableRow>
             ))
-          ) : bookings?.length === 0 ? (
+          ) :bookings?.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={9}

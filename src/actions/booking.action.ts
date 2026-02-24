@@ -24,6 +24,13 @@ export const getBookingsByTutorId = async (id: string) => {
 
 };
 
+export const getAllBookings = async () => {
+  const result =  await bookingServices.getAllBookings();
+  updateTag("getBookings")
+  return result; // { data, error }
+
+};
+
 
 
 export async function updateBookingStatus(bookingId: string, status: string) {

@@ -27,6 +27,7 @@ import {
   updateBookingStatus,
   deleteBooking,
   getBookingsByUserId,
+  getAllBookings,
 } from "@/actions/booking.action"; // ← import your actions
 
 import {
@@ -70,7 +71,7 @@ const refreshBookings = async () => {
 //   setError(null);
 
   try {
-    const result = await getBookingsByUserId(userId as string);
+    const result = await getAllBookings();
     if (result.error) {
       throw new Error(result.error.message || "Failed to load bookings");
     }
