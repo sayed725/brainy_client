@@ -1,8 +1,7 @@
 "use client";
 
-
 import moment from "moment";
-import { Check, Cross, MoreVertical, Trash } from "lucide-react";
+import { Check, MoreVertical, Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -30,60 +29,25 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { deleteBooking, getAllBookings, getBookingsByTutorId, updateBookingStatus } from "@/actions/booking.action";
-import { getTutorByUserId } from "@/actions/tutor.action";
+import {
+  deleteBooking,
+  getAllBookings,
+  updateBookingStatus,
+} from "@/actions/booking.action";
+
 import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 import { authClient } from "@/lib/auth-client";
-import { User } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { VscRequestChanges } from "react-icons/vsc";
+import { Booking } from "@/constants/otherinterface";
 
-export interface Tutor {
-  id: string;
-  title: string;
-  bio: string;
-  rate: number;
-  availability: boolean;
-  poster: string;
-  averageRating: number;
-  totalBookIng: number;
-  createdAt: string;
-  updatedAt: string;
-  categoryId: number;
-  userId: string;
 
-  categories?: {
-    id: number;
-    name: string;
-    slug: string | null;
-  } | null;
-
-  timeSlots?: string[];
-
-  user?: {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image: string | null;
-  };
-}
-
-interface Booking {
-  id: string;
-  tutor?: { title: string; poster: string | null } | null;
-  totalPrice: number;
-  startTime: string;
-  endTime: string;
-  createdAt: string;
-  user: { name: string, id: string, image: string | null };
-  status: string; // "PENDING" | "CONFIRMED" | "CANCELLED"
-}
 
 export default function ManageBookings() {
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
-
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,118 +55,105 @@ export default function ManageBookings() {
 
   const userId = session?.user?.id;
 
-  
+  const refreshBookings = async () => {
+    if (!userId) return;
 
+    //   setLoading(true);
+    //   setError(null);
 
-     const refreshBookings = async () => {
-       if (!userId) return;
-     
-     //   setLoading(true);
-     //   setError(null);
-     
-       try {
-         const result = await getAllBookings();
-         if (result.error) {
-           throw new Error(result.error.message || "Failed to load bookings");
-         }
-         setBookings(result.data?.data || []);
-       } catch (err: any) {
-         setError(err.message || "Failed to refresh bookings");
-        //  toast.error("Could not load bookings");
-       } finally {
-         setLoading(false);
-       }
-     };
-     
-     // Initial load
-     useEffect(() => {
-       if (userId) {
-         refreshBookings();
-       }
-     }, [userId])
+    try {
+      const result = await getAllBookings();
+      if (result.error) {
+        throw new Error(result.error.message || "Failed to load bookings");
+      }
+      setBookings(result.data?.data || []);
+    } catch (err: any) {
+      setError(err.message || "Failed to refresh bookings");
+      //  toast.error("Could not load bookings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//   console.log("Tutor data:", tutor?.id);
-//   console.log("Bookings data:", bookings);
+  // Initial load
+  useEffect(() => {
+    if (userId) {
+      refreshBookings();
+    }
+  }, [userId]);
 
-// Status change handler
-const handleStatusChange = async (
-  bookingId: string,
-  newStatus: "CONFIRMED" | "PENDING" | "CANCELLED",
-) => {
-  const actionVerb = {
-    CONFIRMED: "Confirming",
-    PENDING: "Restoring to pending",
-    CANCELLED: "Cancelling",
-  }[newStatus];
+  //   console.log("Tutor data:", tutor?.id);
+  //   console.log("Bookings data:", bookings);
 
-  const pastVerb = {
-    CONFIRMED: "confirmed",
-    PENDING: "set to pending",
-    CANCELLED: "cancelled",
-  }[newStatus];
+  // Status change handler
+  const handleStatusChange = async (
+    bookingId: string,
+    newStatus: "CONFIRMED" | "PENDING" | "CANCELLED",
+  ) => {
+    const actionVerb = {
+      CONFIRMED: "Confirming",
+      PENDING: "Restoring to pending",
+      CANCELLED: "Cancelling",
+    }[newStatus];
 
-  try {
-    await toast.promise(
-      updateBookingStatus(bookingId, newStatus),
-      {
+    const pastVerb = {
+      CONFIRMED: "confirmed",
+      PENDING: "set to pending",
+      CANCELLED: "cancelled",
+    }[newStatus];
+
+    try {
+      await toast.promise(updateBookingStatus(bookingId, newStatus), {
         loading: `${actionVerb} booking...`,
         success: <b>Booking successfully {pastVerb}!</b>,
-        error: (err) => <b>{err.message || `Failed to update booking status`}</b>,
-      }
-    );
+        error: (err) => (
+          <b>{err.message || `Failed to update booking status`}</b>
+        ),
+      });
 
-    await refreshBookings();
+      await refreshBookings();
+    } catch (err) {
+      // console.error(err);
 
-  } catch (err) {
-    // console.error(err);
-    // toast.promise already handled error toast
-    await refreshBookings(); // keep UI in sync
-  }
-};
+      await refreshBookings();
+    }
+  };
 
-const handleDelete = async (bookingId: string) => {
-  try {
-    await toast.promise(
-      deleteBooking(bookingId),
-      {
+  const handleDelete = async (bookingId: string) => {
+    try {
+      await toast.promise(deleteBooking(bookingId), {
         loading: "Deleting booking...",
         success: <b>Booking successfully deleted!</b>,
         error: (err) => <b>{err.message || "Failed to delete booking"}</b>,
-      }
-    );
-    
-    await refreshBookings();
-  } catch (error) {
-    // toast.promise already showed the error toast
-    await refreshBookings(); // keep UI in sync even on failure
-  }
-};
+      });
 
-
- 
+      await refreshBookings();
+    } catch (error) {
+      await refreshBookings();
+    }
+  };
 
   return (
     <div className="px-0 lg:px-6 pb-16">
       <DashboardPagesHeader
         title={"Manage Booking Requests"}
         subtitle={"Review and respond to student booking requests"}
-        icon={User}
+        icon={VscRequestChanges}
       />
 
       <div className="mt-6 overflow-hidden bg-card">
         <Table>
           <TableCaption>
             {bookings.length === 0
-              ? "No bookings found"
-            
-                : "Your bookings"}
+              ? "No booking requests found"
+              : "Your bookings booking request."}
           </TableCaption>
 
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
               <TableHead className="w-12">#</TableHead>
               <TableHead className="text-xs">Image</TableHead>
-              <TableHead className="text-xs">Name</TableHead>
+              <TableHead className="text-xs">User Name</TableHead>
               <TableHead className="text-xs">Price</TableHead>
               <TableHead className="text-xs">Start Time</TableHead>
               <TableHead className="text-xs">End Time</TableHead>
@@ -214,18 +165,18 @@ const handleDelete = async (bookingId: string) => {
             </TableRow>
           </TableHeader>
 
-        <TableBody>
-          {loading ? (
-            Array.from({ length: 10 }).map((_, i) => (
-              <TableRow key={i}>
-                {Array.from({ length: 9 }).map((_, j) => (
-                  <TableCell key={j}>
-                    <div className="bg-muted animate-pulse h-8 rounded"></div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) :bookings?.length === 0 ? (
+          <TableBody>
+            {loading ? (
+              Array.from({ length: 10 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 9 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <div className="bg-muted animate-pulse h-8 rounded"></div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : bookings?.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={9}
@@ -236,7 +187,6 @@ const handleDelete = async (bookingId: string) => {
               </TableRow>
             ) : (
               bookings.map((booking, index) => {
-               
                 return (
                   <TableRow key={booking.id} className="hover:bg-muted/40">
                     <TableCell className="text-muted-foreground">
@@ -246,7 +196,7 @@ const handleDelete = async (bookingId: string) => {
                     <TableCell>
                       <div className="h-10 w-10 rounded-full overflow-hidden border bg-muted">
                         <img
-                          src={booking.user.image?? "/default-tutor.jpg"}
+                          src={booking.user.image ?? "https://ui-avatars.com/api/?name=User&background=random&color=fff&size=128"}
                           alt={booking.user?.name ?? "user"}
                           className="h-full w-full object-cover"
                         />
@@ -310,16 +260,16 @@ const handleDelete = async (bookingId: string) => {
                           {booking.status === "PENDING" && (
                             <DropdownMenuItem
                               onClick={() =>
-                                handleStatusChange(booking.id, "CANCELLED")
+                                handleStatusChange(booking.id, "CONFIRMED")
                               }
                               className="text-green-700 cursor-pointer dark:text-green-500"
                             >
                               <Check className="mr-2 h-4 w-4 dark:text-white" />
-                              Cancel Booking
+                              Confirm Booking
                             </DropdownMenuItem>
                           )}
 
-                          {booking.status === "CANCELLED" && (
+                          {booking.status === "CONFIRMED" && (
                             <DropdownMenuItem
                               onClick={() =>
                                 handleStatusChange(booking.id, "PENDING")

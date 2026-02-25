@@ -2,7 +2,7 @@
 
 import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 import moment from "moment";
-import { Check, Cross, MoreVertical, Trash, User } from "lucide-react";
+import { Check, MoreVertical, Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -18,15 +18,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FaCircle } from "react-icons/fa";
-import { MdPendingActions } from "react-icons/md";
+
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import {
-  
   updateBookingStatus,
   deleteBooking,
-  getBookingsByUserId,
   getAllBookings,
 } from "@/actions/booking.action"; // ← import your actions
 
@@ -42,16 +39,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-
-interface Booking {
-  id: string;
-  tutor?: { title: string; poster: string | null } | null;
-  totalPrice: number;
-  startTime: string;
-  endTime: string;
-  createdAt: string;
-  status: string; // "PENDING" | "CONFIRMED" | "CANCELLED"
-}
+import { VscRequestChanges } from "react-icons/vsc";
+import { Booking } from "@/constants/otherinterface";
 
 export default function ManageBookings() {
   const { data: session, isPending: isSessionLoading } =
@@ -63,191 +52,151 @@ export default function ManageBookings() {
   const userId = session?.user?.id;
 
   // Load bookings
- // reusable refresh function
-const refreshBookings = async () => {
-  if (!userId) return;
+  const refreshBookings = async () => {
+    if (!userId) return;
 
-//   setLoading(true);
-//   setError(null);
+    //   setLoading(true);
+    //   setError(null);
 
-  try {
-    const result = await getAllBookings();
-    if (result.error) {
-      throw new Error(result.error.message || "Failed to load bookings");
+    try {
+      const result = await getAllBookings();
+      if (result.error) {
+        throw new Error(result.error.message || "Failed to load bookings");
+      }
+      setBookings(result.data?.data || []);
+    } catch (err: any) {
+      setError(err.message || "Failed to refresh bookings");
+      toast.error("Could not load bookings");
+    } finally {
+      setLoading(false);
     }
-    setBookings(result.data?.data || []);
-  } catch (err: any) {
-    setError(err.message || "Failed to refresh bookings");
-    toast.error("Could not load bookings");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
-// Initial load
-useEffect(() => {
-  if (userId) {
-    refreshBookings();
-  }
-}, [userId]);
+  // Initial load
+  useEffect(() => {
+    if (userId) {
+      refreshBookings();
+    }
+  }, [userId]);
 
-// Status change handler
-const handleStatusChange = async (
-  bookingId: string,
-  newStatus: "CONFIRMED" | "PENDING" | "CANCELLED",
-) => {
-  const actionVerb = {
-    CONFIRMED: "Confirming",
-    PENDING: "Restoring to pending",
-    CANCELLED: "Cancelling",
-  }[newStatus];
+  // Status change handler
+  const handleStatusChange = async (
+    bookingId: string,
+    newStatus: "CONFIRMED" | "PENDING" | "CANCELLED",
+  ) => {
+    const actionVerb = {
+      CONFIRMED: "Confirming",
+      PENDING: "Restoring to pending",
+      CANCELLED: "Cancelling",
+    }[newStatus];
 
-  const pastVerb = {
-    CONFIRMED: "confirmed",
-    PENDING: "set to pending",
-    CANCELLED: "cancelled",
-  }[newStatus];
+    const pastVerb = {
+      CONFIRMED: "confirmed",
+      PENDING: "set to pending",
+      CANCELLED: "cancelled",
+    }[newStatus];
 
-  try {
-    await toast.promise(
-      updateBookingStatus(bookingId, newStatus),
-      {
+    try {
+      await toast.promise(updateBookingStatus(bookingId, newStatus), {
         loading: `${actionVerb} booking...`,
         success: <b>Booking successfully {pastVerb}!</b>,
-        error: (err) => <b>{err.message || `Failed to update booking status`}</b>,
-      }
-    );
+        error: (err) => (
+          <b>{err.message || `Failed to update booking status`}</b>
+        ),
+      });
 
-    await refreshBookings();
+      await refreshBookings();
+    } catch (err) {
+      // console.error(err);
+      // toast.promise already handled error toast
+      await refreshBookings(); // keep UI in sync
+    }
+  };
 
-  } catch (err) {
-    // console.error(err);
-    // toast.promise already handled error toast
-    await refreshBookings(); // keep UI in sync
-  }
-};
-
-const handleDelete = async (bookingId: string) => {
-  try {
-    await toast.promise(
-      deleteBooking(bookingId),
-      {
+  const handleDelete = async (bookingId: string) => {
+    try {
+      await toast.promise(deleteBooking(bookingId), {
         loading: "Deleting booking...",
         success: <b>Booking successfully deleted!</b>,
         error: (err) => <b>{err.message || "Failed to delete booking"}</b>,
-      }
-    );
-    
-    await refreshBookings();
-  } catch (error) {
-    // toast.promise already showed the error toast
-    await refreshBookings(); // keep UI in sync even on failure
-  }
-};
+      });
 
-  // Handle delete with confirmation
-//   const handleDelete = async(bookingId: string) => {
-      
-//    try {
-//      await toast.promise(
-//         deleteBooking(bookingId),
-//         {
-//           loading: "Deleting booking...",
-//           success: <b>Booking successfully deleted!</b>,
-//           error: <b>Failed to delete booking.</b>,
-//         }
-//       );
-//      await refreshBookings();
-    
-//    } catch (error) {
-//     //  console.error(error);
-//     // toast.promise already handled error toast
-//     await refreshBookings(); // keep UI in sync
-//    }
+      await refreshBookings();
+    } catch (error) {
+      await refreshBookings();
+    }
+  };
 
-//   };
+  //   if (isSessionLoading || loading) {
+  //     return (
+  //       <div className="flex items-center justify-center min-h-[50vh]">
+  //         <div className="text-center space-y-3">
+  //           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+  //           <p className="text-sm text-muted-foreground">
+  //             Loading your bookings...
+  //           </p>
+  //         </div>
+  //       </div>
+  //     );
+  //   }
 
-//   if (isSessionLoading || loading) {
-//     return (
-//       <div className="flex items-center justify-center min-h-[50vh]">
-//         <div className="text-center space-y-3">
-//           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
-//           <p className="text-sm text-muted-foreground">
-//             Loading your bookings...
-//           </p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <div className="text-center py-12 text-destructive">
-//         <p>{error}</p>
-//         <button
-//           onClick={() => window.location.reload()}
-//           className="mt-4 text-sm underline"
-//         >
-//           Try again
-//         </button>
-//       </div>
-//     );
-//   }
-
-  const isTutor = session?.user?.role === "TUTOR"; // adjust to your actual field
+  //   if (error) {
+  //     return (
+  //       <div className="text-center py-12 text-destructive">
+  //         <p>{error}</p>
+  //         <button
+  //           onClick={() => window.location.reload()}
+  //           className="mt-4 text-sm underline"
+  //         >
+  //           Try again
+  //         </button>
+  //       </div>
+  //     );
+  //   }
 
   return (
     <div className="px-0 lg:px-6 pb-16 ">
       <DashboardPagesHeader
-        title={isTutor ? "Manage Booking Requests" : "My Bookings"}
-        subtitle={
-          isTutor
-            ? "Review and respond to student booking requests"
-            : "View and manage your tutoring sessions"
-        }
-        icon={User}
+        title={"My Bookings"}
+        subtitle={"View and manage your tutoring sessions"}
+        icon={VscRequestChanges}
       />
 
       <div className="mt-6 overflow-hidden bg-card">
         <Table>
           <TableCaption>
-            {bookings.length === 0
-              ? "No bookings found"
-              : isTutor
-                ? "Incoming requests"
-                : "Your bookings"}
+            {bookings.length === 0 ? "No bookings found" : "Your bookings"}
           </TableCaption>
 
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
               <TableHead className="w-12">#</TableHead>
               <TableHead className="text-xs">Image</TableHead>
-              <TableHead className="text-xs">
-                {isTutor ? "Student" : "Tutor"}
-              </TableHead>
+              <TableHead className="text-xs">Course Title</TableHead>
               <TableHead className="text-xs">Price</TableHead>
               <TableHead className="text-xs">Start Time</TableHead>
               <TableHead className="text-xs">End Time</TableHead>
               <TableHead className="text-xs">Created</TableHead>
               <TableHead className="text-xs">Status</TableHead>
               <TableHead className="text-center text-xs pr-6">
+                {" "}
                 Actions
               </TableHead>
             </TableRow>
           </TableHeader>
 
-        <TableBody>
-          {loading ? (
-            Array.from({ length: 10 }).map((_, i) => (
-              <TableRow key={i}>
-                {Array.from({ length: 9 }).map((_, j) => (
-                  <TableCell key={j}>
-                    <div className="bg-muted animate-pulse h-8 rounded"></div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : bookings?.length === 0 ? (
+          <TableBody>
+            {loading ? (
+              Array.from({ length: 10 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 9 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <div className="bg-muted animate-pulse h-8 rounded"></div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : bookings?.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={9}
@@ -258,7 +207,6 @@ const handleDelete = async (bookingId: string) => {
               </TableRow>
             ) : (
               bookings.map((booking, index) => {
-               
                 return (
                   <TableRow key={booking.id} className="hover:bg-muted/40">
                     <TableCell className="text-muted-foreground">

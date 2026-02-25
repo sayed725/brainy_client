@@ -3,7 +3,7 @@
 
 
 import moment from "moment";
-import { Check, Cross, MoreVertical, Trash } from "lucide-react";
+import { Check, MoreVertical, Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -35,20 +35,13 @@ import {
 import { deleteBooking, getAllBookings, updateBookingStatus } from "@/actions/booking.action";
 import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 import { authClient } from "@/lib/auth-client";
-import { User } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { VscRequestChanges } from "react-icons/vsc";
+import { Booking } from "@/constants/otherinterface";
 
-interface Booking {
-  id: string;
-  tutor?: { title: string; poster: string | null } | null;
-  totalPrice: number;
-  startTime: string;
-  endTime: string;
-  createdAt: string;
-  user: { name: string, id: string, image: string | null };
-  status: string; // "PENDING" | "CONFIRMED" | "CANCELLED"
-}
+
 
 
 export default function ManageBookings() {
@@ -142,8 +135,8 @@ export default function ManageBookings() {
          
          await refreshBookings();
        } catch (error) {
-         // toast.promise already showed the error toast
-         await refreshBookings(); // keep UI in sync even on failure
+       
+         await refreshBookings(); 
        }
      };
 
@@ -159,9 +152,9 @@ export default function ManageBookings() {
         <div className="px-0 lg:px-6 pb-16">
 
               <DashboardPagesHeader
-        title={"Manage Booking Requests"}
+        title={"Manage All Booking Requests"}
         subtitle={"Review and respond to student booking requests"}
-        icon={User}
+        icon={VscRequestChanges}
       />
        
 
@@ -171,7 +164,7 @@ export default function ManageBookings() {
                    {bookings.length === 0
                      ? "No bookings found"
                    
-                       : "Your bookings"}
+                       : "All Bookings Request"}
                  </TableCaption>
        
                  <TableHeader>
@@ -224,7 +217,7 @@ export default function ManageBookings() {
                            <TableCell>
                              <div className="h-10 w-10 rounded-full overflow-hidden border bg-muted">
                                <img
-                                 src={booking.user.image?? "/default-tutor.jpg"}
+                                 src={booking.user.image?? "https://ui-avatars.com/api/?name=User&background=random&color=fff&size=128"}
                                  alt={booking.user?.name ?? "user"}
                                  className="h-full w-full object-cover"
                                />
@@ -308,8 +301,9 @@ export default function ManageBookings() {
                                      className="text-green-700 cursor-pointer dark:text-green-500"
                                    >
                                      <Check className="mr-2 h-4 w-4 dark:text-white" />
-                                     Cancel Booking
+                                    Make Cancel
                                    </DropdownMenuItem>
+                                   
                                  )}
        
                                  {booking.status === "CANCELLED" && (
@@ -323,7 +317,49 @@ export default function ManageBookings() {
                                      Make Pending
                                    </DropdownMenuItem>
                                  )}
-       
+
+                                  {booking.status === "CONFIRMED" && (
+                                   <DropdownMenuItem
+                                     onClick={() =>
+                                       handleStatusChange(booking.id, "PENDING")
+                                     }
+                                     className="text-yellow-500 cursor-pointer dark:text-yellow-500"
+                                   >
+                                     <Check className="mr-2 h-4 w-4" />
+                                     Make Pending
+                                   </DropdownMenuItem>
+                                 )}
+
+
+                                  {booking.status === "CONFIRMED" && (
+                                   <DropdownMenuItem
+                                     onClick={() =>
+                                       handleStatusChange(booking.id, "CANCELLED")
+                                     }
+                                     className="text-yellow-500 cursor-pointer dark:text-yellow-500"
+                                   >
+                                     <Check className="mr-2 h-4 w-4" />
+                                     Make Cancel
+                                   </DropdownMenuItem>
+                                 )}
+
+
+
+                                 
+
+
+                                  <DropdownMenuItem
+                                     onClick={() =>
+                                       handleStatusChange(booking.id, "CONFIRMED")
+                                     }
+                                     disabled={booking.status === "CONFIRMED"}
+                                     className="text-green-500 cursor-pointer dark:text-yellow-500"
+                                   >
+                                     <Check className="mr-2 h-4 w-4" />
+                                     Make Confirm
+                                   </DropdownMenuItem>
+
+
                                  <AlertDialog>
                                    <AlertDialogTrigger asChild>
                                      <DropdownMenuItem
