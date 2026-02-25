@@ -19,3 +19,14 @@ export const getTutorByUserId = async (id: string) => {
 
 };
 
+export const updateTutor = async (id: string, tutorData: TutorUpdateInput) => {
+  // console.log("[updateTutor] Updating tutor for user:", id);
+  const result = await tutorServices.updateTutor(id, tutorData);
+    if (result?.error) {
+    throw new Error(result.error.message || "Failed to update tutor");
+  }
+  updateTag("updateTutor")
+  return result; // { data, error }
+};
+
+

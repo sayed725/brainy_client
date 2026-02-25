@@ -83,6 +83,51 @@ export const tutorServices = {
     }
   },
 
+  updateTutor: async (id: string, tutorData: TutorUpdateInput) => {
+    console.log("[updateTutor] Updating tutor for user:", id);
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${process.env.BACKEND_URL}/api/v1/tutor/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(tutorData),
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: {
+            message: data?.error?.message || data?.message || "Failed to update tutor",
+            status: res.status,
+          },
+        };
+      }
+
+      return {
+        data: data?.data || data,
+        error: null,
+      };
+    } catch (err: any) {
+      // console.error("[updateTutor]", err);
+      return {
+        data: null,
+        error: { message: err.message || "Network or server error" },
+      };
+    }
+  },
+
 
   getSingleTutor: async function (id: string) {
       try {

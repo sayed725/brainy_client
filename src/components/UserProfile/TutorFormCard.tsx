@@ -101,7 +101,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
           userId: user?.id ?? null,
         };
 
-        console.log("Sending to API:", tutorData);
+        // console.log("Sending to API:", tutorData);
 
         const res = await addTutor(tutorData);
 

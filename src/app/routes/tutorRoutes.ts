@@ -5,17 +5,9 @@ export const tutorRoutes: Route[] = [
   {
     title: "Tutor Management",
     items: [
-        {
-        title: "Tutor Dashboard",
+      {
+        title: "Tutor Profile",
         url: "/tutor-dashboard",
-      },
-      {
-        title: "Profile",
-        url: "/tutor-dashboard/tutor-profile",
-      },
-      {
-        title: "Manage Courses",
-        url: "/tutor-dashboard/manage-courses",
       },
       {
         title: "Manage Bookings",
