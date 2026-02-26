@@ -6,12 +6,8 @@ export const userRoutes: Route[] = [
     title: "Student Management",
     items: [
       {
-        title: "Student Dashboard",
-        url: "/dashboard",
-      },
-      {
         title: "Student Profile",
-        url: "/dashboard/student-profile",
+        url: "/dashboard",
       },
       {
         title: "Manage Bookings",
@@ -20,10 +16,6 @@ export const userRoutes: Route[] = [
       {
         title: "Upgrade To Tutor",
         url: "/dashboard/upgrade-to-tutor",
-      },
-      {
-        title: "ManageCourses",
-        url: "/dashboard/manage-courses",
       },
     ],
   },

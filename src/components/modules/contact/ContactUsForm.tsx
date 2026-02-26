@@ -149,12 +149,12 @@ export default function ContactUsForm() {
         />
       </div>
       {/* Submit Button */}
-      <button
-        type="submit"
+      <div
+        // type="submit"
         className="w-full flex items-center justify-end mt-3"
       >
         <UnderLineButton text={"Send Message"} />
-      </button>
+      </div>
     </form>
     );
 }

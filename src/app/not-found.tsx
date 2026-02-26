@@ -14,30 +14,30 @@ export default function NotFound() {
       <div className="container px-4 mx-auto">
         <div className="max-w-4xl mx-auto relative overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg dark:shadow-2xl transition-all duration-300">
           {/* Decorative Gradients – theme-aware */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-teal-100/30 dark:from-teal-900/20 to-cyan-100/20 dark:to-cyan-950/10 rounded-full blur-3xl -z-10"></div>
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-br from-teal-200/20 dark:from-teal-800/15 to-emerald-100/20 dark:to-emerald-950/10 rounded-full blur-3xl -z-10"></div>
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-linear-to-br from-teal-100/30 dark:from-teal-900/20 to-cyan-100/20 dark:to-cyan-950/10 rounded-full blur-3xl -z-10"></div>
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-linear-to-br from-teal-200/20 dark:from-teal-800/15 to-emerald-100/20 dark:to-emerald-950/10 rounded-full blur-3xl -z-10"></div>
 
           {/* Circuit-like Lines – subtle in both modes */}
           <div className="absolute inset-0 overflow-hidden opacity-10 dark:opacity-5">
-            <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"></div>
+            <div className="absolute top-1/4 left-0 w-full h-px bg-linear-to-br from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"></div>
             <div
-              className="absolute top-2/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
+              className="absolute top-2/4 left-0 w-full h-px bg-linear-to-br from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
               style={{ animationDelay: "1s" }}
             ></div>
             <div
-              className="absolute top-3/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
+              className="absolute top-3/4 left-0 w-full h-px bg-linear-to-br from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
               style={{ animationDelay: "2s" }}
             ></div>
             <div
-              className="absolute left-1/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
+              className="absolute left-1/4 top-0 h-full w-px bg-linear-to-br from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
               style={{ animationDelay: "0.5s" }}
             ></div>
             <div
-              className="absolute left-2/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
+              className="absolute left-2/4 top-0 h-full w-px bg-linear-to-br from-transparent via-teal-500/70 dark:via-teal-500/50 to-transparent animate-pulse"
               style={{ animationDelay: "1.5s" }}
             ></div>
             <div
-              className="absolute left-3/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-teal-600/60 dark:via-teal-600/40 to-transparent animate-pulse"
+              className="absolute left-3/4 top-0 h-full w-px bg-linear-to-br from-transparent via-teal-600/60 dark:via-teal-600/40 to-transparent animate-pulse"
               style={{ animationDelay: "2.5s" }}
             ></div>
           </div>
@@ -98,7 +98,7 @@ export default function NotFound() {
                   </div>
 
                   <div className="relative z-10 text-center">
-                    <div className="text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-teal-600 to-teal-400 dark:from-teal-400 dark:to-cyan-300">
+                    <div className="text-9xl font-black text-transparent bg-clip-text bg-linear-to-br from-teal-600 to-teal-400 dark:from-teal-400 dark:to-cyan-300">
                       404
                     </div>
                     <div className="mt-4 flex justify-center text-teal-600 dark:text-teal-400">

@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Separator } from "@/components/ui/separator";
 import { Calendar, CheckCircle2, Lock, Shield } from "lucide-react";
 import { toast } from "sonner";
+import moment from "moment";
 
 type AccountInfoCardProps = {
   user: any; // adjust type if you have full user shape
@@ -37,6 +38,16 @@ export default function AccountInfoCard({ user, createdAt }: AccountInfoCardProp
           <div>
             <p className="text-xs text-muted-foreground">Member Since</p>
             <p className="font-medium">{formatSafe(createdAt ?? user?.createdAt)}</p>
+          </div>
+        </div>
+        <Separator />
+        <div className="flex items-start gap-4">
+          <div className="bg-teal-100 dark:bg-teal-950/70 p-3 rounded-full shrink-0">
+            <Calendar className="h-5 w-5 text-teal-600" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Last Updated</p>
+            <p className="font-medium">{user.updatedAt && moment(user.updatedAt).fromNow()}</p>
           </div>
         </div>
 

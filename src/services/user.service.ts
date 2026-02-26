@@ -1,4 +1,5 @@
 // lib/user-services.ts  (or app/lib/session.ts)
+import { updateUser } from "better-auth/api";
 import { cookies } from "next/headers";
 
 type SessionResponse = {
@@ -70,4 +71,100 @@ export const userServices = {
       };
     }
   },
+
+
+  updateUser: async (id: string, userData: any) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${process.env.BACKEND_URL}/api/v1/user/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(userData),
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      } 
+      if (!res.ok) {
+        return {
+          data: null,
+          error: {
+            message: data?.error?.message || data?.message || "Failed to update user",
+            status: res.status,
+          },
+        };
+      }
+
+      return {
+        data: data?.data || data,
+        error: null,
+      };
+    } catch (err: any) {
+      console.error("[updateUser]", err);
+      return {
+        data: null,
+        error: { message: err.message || "Network or server error" },
+      };
+    }
+  },
+
+
+   getAllUser: async () => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${process.env.BACKEND_URL}/api/v1/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      } 
+      if (!res.ok) {
+        return {
+          data: null,
+          error: {
+            message: data?.error?.message || data?.message || "Failed to fetch users",
+            status: res.status,
+          },
+        };
+      }
+
+      return {
+        data: data?.data || data,
+        error: null,
+      };
+    } catch (err: any) {
+      console.error("[fetchusers]", err);
+      return {
+        data: null,
+        error: { message: err.message || "Network or server error" },
+      };
+    }
+  },
+
+  
+
 };
+
+
+
+

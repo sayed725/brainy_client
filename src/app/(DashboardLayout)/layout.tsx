@@ -32,13 +32,20 @@ export default async function DashboardLayout({
   
 
     const { data } = await userServices.getSession()
- const userInfo = data.user
+
+    if (!data || !data.user) {
+      // If there's no session or user data, you might want to redirect to login or show an error
+      // For example:
+      // redirect("/login");
+      return <div className="p-4">You must be logged in to access the dashboard.</div>;
+    }
+ const userInfo = { ...data.user, role: data.user.role || 'STUDENT' }
 
 //  console.log(userInfo)
 
   return (
     <SidebarProvider>
-      <AppSidebar user={userInfo} />
+      <AppSidebar user ={userInfo} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2  px-4">
           <SidebarTrigger className="-ml-1" />

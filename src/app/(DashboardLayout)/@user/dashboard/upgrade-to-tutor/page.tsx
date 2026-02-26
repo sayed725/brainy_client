@@ -57,6 +57,7 @@ import { redirect, useRouter } from "next/navigation";
 import ProfileCard from "@/components/UserProfile/ProfileCard";
 import AccountInfoCard from "@/components/UserProfile/AccountInfoCard";
 import TutorFormCard from "@/components/UserProfile/TutorFormCard";
+import UserProfileSkelton from "@/components/modules/user/UserProfileSkelton";
 
 type Category = {
   id: number;
@@ -147,12 +148,7 @@ export default function StudentProfile() {
 
   if (isPending) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="text-center space-y-3">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-teal-500 border-t-transparent mx-auto" />
-          <p className="text-muted-foreground">Loading your profile...</p>
-        </div>
-      </div>
+      <UserProfileSkelton/>
     );
   }
 

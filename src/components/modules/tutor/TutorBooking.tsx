@@ -119,7 +119,7 @@ async function confirmBooking() {
     userId: user?.id,
   };
 
-  console.log("Sending to API:", bookingData);
+  // console.log("Sending to API:", bookingData);
   
   try {
     const res = await addBooking(bookingData);

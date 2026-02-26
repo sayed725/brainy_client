@@ -17,7 +17,7 @@ export default function TutorProfileSkelton() {
           <CardHeader className="pb-6">
             <div className="flex flex-col md:flex-row md:items-start gap-6">
               {/* Avatar Skeleton */}
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <div className="h-32 w-32 rounded-full bg-muted border-4 border-primary/30 shadow-md" />
               </div>
 

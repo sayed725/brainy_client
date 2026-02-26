@@ -31,14 +31,14 @@ export default function ProfileCard({ user }: ProfileCardProps) {
               </AvatarFallback>
             </Avatar>
 
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className="absolute -bottom-2 -right-2 rounded-full bg-teal-600 hover:bg-teal-700 text-white shadow-lg"
               title="Upload profile picture (coming soon)"
             >
               <Upload className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
 
           <div className="mt-5 text-center space-y-1">

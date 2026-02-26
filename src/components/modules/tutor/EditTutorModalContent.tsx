@@ -336,7 +336,7 @@ export default function EditTutorModalContent({ tutor, close, onSuccess }: Props
           <Button
             type="submit"
             disabled={form.state.isSubmitting}
-            className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white min-w-[140px]"
+            className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white min-w-35"
           >
             {form.state.isSubmitting ? 'Saving...' : 'Save Changes'}
           </Button>

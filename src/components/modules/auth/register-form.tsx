@@ -21,6 +21,7 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 
 import * as z from "zod";
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   name: z.string().min(1, "This field is required"),
@@ -29,7 +30,8 @@ const formSchema = z.object({
 });
 
 export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
-
+    
+  const router = useRouter();
 
 
     const handleGoogleLogin = async() => {
@@ -63,6 +65,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
         }
 
         toast.success("User Created Successfully", { id: toastId });
+        router.push('/');
       } catch (err) {
         toast.error("Something went wrong, please try again.", { id: toastId });
       }

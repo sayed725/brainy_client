@@ -140,7 +140,7 @@ export default function TutorDashboard() {
        <Card className="border shadow-sm">
          <CardHeader className="pb-6">
            <div className="flex flex-col md:flex-row md:items-start gap-6">
-             <div className="flex-shrink-0">
+             <div className="shrink-0">
                <img
                  src={
                    tutor.poster ??
