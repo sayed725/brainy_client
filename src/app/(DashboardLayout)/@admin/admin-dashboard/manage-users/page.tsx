@@ -307,7 +307,7 @@ export default function ManageUsers() {
               {loading ? (
                 Array.from({ length: 10 }).map((_, i) => (
                   <TableRow key={i}>
-                    {Array.from({ length: 7 }).map((_, j) => (
+                    {Array.from({ length: 9 }).map((_, j) => (
                       <TableCell key={j}>
                         <div className="bg-muted animate-pulse h-8 rounded"></div>
                       </TableCell>
