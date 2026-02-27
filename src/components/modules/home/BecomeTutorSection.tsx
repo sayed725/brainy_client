@@ -15,7 +15,7 @@ const THEME_COLOR = "#1cb89e";
 
 export default function BecomeTutorSection() {
   return (
-    <section className=" py-10 md:py-24  bg-gray-100 dark:bg-gray-950 overflow-hidden">
+    <section className=" py-10   bg-gray-100 dark:bg-gray-950 overflow-hidden">
       <div className="relative mx-auto lg:w-11/12 max-w-screen-2xl">
         {/* Subtle background pattern - visible in both modes */}
         <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] pointer-events-none">
