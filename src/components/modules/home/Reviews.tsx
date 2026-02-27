@@ -14,6 +14,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import moment from "moment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import PageHeader from "@/components/shared/PageHeader";
 
 interface Review {
   id: number;
@@ -47,16 +48,12 @@ export default function Reviews({ reviews }: ReviewsProps) {
   }
 
   return (
-    <div className="w-11/12 mx-auto mb-10">
-      <div className="text-center mb-8">
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-          What Our <span className="text-[#1cb89e]">Students</span> Say
-        </h2>
-        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-          Real feedback from students about their tutoring experiences
-        </p>
-      </div>
+    <div className="bg-gray-100 dark:bg-gray-950">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-0">
 
+
+      <PageHeader title="What Our Students Say" subtitle="Student Reviews"/>
+     
       {/* Carousel */}
       <Carousel
         plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
@@ -64,7 +61,7 @@ export default function Reviews({ reviews }: ReviewsProps) {
           align: "start",
           loop: true,
         }}
-        className="w-full max-w-6xl mx-auto"
+        className="w-full  mx-auto"
       >
         <CarouselContent>
           {reviews.map((review) => (
@@ -135,9 +132,10 @@ export default function Reviews({ reviews }: ReviewsProps) {
           ))}
         </CarouselContent>
 
-        <CarouselPrevious className="bg-[#1cb89e] text-white hover:bg-[#1cb89e]/90 border-none hidden lg:flex" />
-        <CarouselNext className="bg-[#1cb89e] text-white hover:bg-[#1cb89e]/90 border-none hidden lg:flex" />
+        {/* <CarouselPrevious className="bg-[#1cb89e] text-white hover:bg-[#1cb89e]/90 border-none hidden lg:flex" />
+        <CarouselNext className="bg-[#1cb89e] text-white hover:bg-[#1cb89e]/90 border-none hidden lg:flex" /> */}
       </Carousel>
+    </div>
     </div>
   );
 }

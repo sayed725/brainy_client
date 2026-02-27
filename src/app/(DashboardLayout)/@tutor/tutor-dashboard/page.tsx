@@ -288,7 +288,7 @@ export default function TutorDashboard() {
                })}
              </p>
              <p className="mt-1">
-               Last updated {tutor.createdAt && moment(tutor.updatedAt).fromNow()}
+               Last updated {tutor.updatedAt && moment(tutor.updatedAt).fromNow()}
              </p>
            </div>
          </CardContent>
