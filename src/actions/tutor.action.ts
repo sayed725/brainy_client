@@ -19,6 +19,17 @@ export const getTutorByUserId = async (id: string) => {
 
 };
 
+export const getAllTutors = async () => {
+  const result =  await tutorServices.getAllTutors();
+   if (result?.error) {
+    throw new Error(result.error.message || "Failed to fetch tutor");
+  }
+  updateTag("getAllTutors")
+  return result; // { data, error }
+
+};
+
+
 export const updateTutor = async (id: string, tutorData: TutorUpdateInput) => {
   // console.log("[updateTutor] Updating tutor for user:", id);
   const result = await tutorServices.updateTutor(id, tutorData);

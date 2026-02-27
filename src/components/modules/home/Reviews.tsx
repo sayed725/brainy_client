@@ -69,7 +69,7 @@ export default function Reviews({ reviews }: ReviewsProps) {
               key={review.id}
               className="md:basis-1/2 lg:basis-1/3 pl-4"
             >
-              <div className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-8 h-full flex flex-col">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-8 h-full flex flex-col">
                 {/* Quote Icon */}
                 <div className="flex justify-start mb-6">
                   <div className="relative">
@@ -92,7 +92,7 @@ export default function Reviews({ reviews }: ReviewsProps) {
                 </div>
 
                 {/* Comment (limited) */}
-                <p className="text-gray-700 text-base leading-relaxed mb-8 line-clamp-4 flex-grow">
+                <p className="text-gray-700 dark:text-gray-100 text-base leading-relaxed mb-8 line-clamp-4 flex-grow">
                   {review.comment || "No comment provided."}
                 </p>
 
@@ -110,10 +110,10 @@ export default function Reviews({ reviews }: ReviewsProps) {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold text-gray-900 text-sm">
+                      <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
                         {review.user?.name || "Anonymous Student"}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-50">
                         {moment(review.createdAt).fromNow()}
                       </p>
                     </div>
@@ -121,7 +121,7 @@ export default function Reviews({ reviews }: ReviewsProps) {
 
                   {/* Tutor Info (small) */}
                   <div className="text-right">
-                    <p className="text-xs text-gray-500">for</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-100">for</p>
                     <p className="text-sm font-medium text-[#1cb89e] line-clamp-1 max-w-[140px]">
                       {review.tutor?.title || "Tutor"}
                     </p>

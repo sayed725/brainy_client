@@ -13,7 +13,7 @@ export async function proxy(request: NextRequest) {
 
   const { data } = await userServices.getSession();
 
-  if (data) {
+  if (data && data.user) {
     isAuthenticated = true;
     isAdmin = data.user.role === Roles.admin;
     isTutor = data.user.role === Roles.tutor;

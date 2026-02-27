@@ -29,6 +29,7 @@ interface Tutor {
 
 export default async function PopularTutors() {
   const result = await tutorServices.getAllTutors();
+  const slicedResult = { ...result, data: result.data ? { ...result.data, data: result.data.data?.slice(0, 8) } : null };
 
   // Debug log (remove or conditional in production)
   // if (process.env.NODE_ENV === "development") {
@@ -51,7 +52,7 @@ export default async function PopularTutors() {
     );
   }
 
-  const popularTutors: Tutor[] = result.data.data;
+  const popularTutors: Tutor[] = result.data.data?.slice(0, 8)
 
   return (
     <section className="py-10 md:py-24 bg-gray-100 dark:bg-gray-950">
