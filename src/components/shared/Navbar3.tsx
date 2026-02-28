@@ -140,11 +140,12 @@ export default function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>{session?.user?.name}</DropdownMenuLabel>
+                  <DropdownMenuLabel>{session?.user?.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
+                  {/* <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                   <DropdownMenuItem asChild>
                     <Link  href={
                             session?.user?.role === "tutor"
@@ -159,7 +160,7 @@ export default function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    className="text-red-600 focus:bg-red-50"
+                    className="text-red-600 focus:bg-red-50 dark:focus:bg-red-500"
                     onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4" />

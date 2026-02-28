@@ -18,7 +18,7 @@ export const bookingServices = {
         cache: "no-store",
       });
 
-      console.log(bookingData);
+      // console.log(bookingData);
 
       let data;
       try {

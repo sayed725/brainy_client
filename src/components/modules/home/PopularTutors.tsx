@@ -79,7 +79,7 @@ export default async function PopularTutors() {
             size="lg"
             className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-6 text-lg group transition-all duration-300"
           >
-           <Link href='/tutor' className="flex items-center gap-2">
+           <Link href='/tutors' className="flex items-center gap-2">
             Browse more tutors
             <ChevronRight
               className="ml-2 transition-transform group-hover:translate-x-1"

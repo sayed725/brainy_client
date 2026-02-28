@@ -29,7 +29,7 @@ const LoginForm = () => {
   } = form;
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      console.log(data);
+      // console.log(data);
     //   const res = await loginUser(data);
     //   console.log(res);
     //   if (res.success) {

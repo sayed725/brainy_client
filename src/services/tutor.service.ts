@@ -51,7 +51,7 @@ export const tutorServices = {
         cache: "no-store",
       });
 
-      console.log(tutorData)
+      // console.log(tutorData)
 
       let data;
       try {
@@ -84,7 +84,7 @@ export const tutorServices = {
   },
 
   updateTutor: async (id: string, tutorData: TutorUpdateInput) => {
-    console.log("[updateTutor] Updating tutor for user:", id);
+    // console.log("[updateTutor] Updating tutor for user:", id);
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${process.env.BACKEND_URL}/api/v1/tutor/${id}`, {

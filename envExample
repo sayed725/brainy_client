@@ -1,0 +1,7 @@
+BACKEND_URL="your backend url"
+FRONTEND_URL="your frontend url"
+
+
+
+API_URL="your backend url"
+AUTH_URL="your backend url for auth"
