@@ -161,6 +161,61 @@ export const userServices = {
     }
   },
 
+
+   deleteUser: async (id: string) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${process.env.BACKEND_URL}/api/v1/user/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      } 
+      if (!res.ok) {
+        return {
+          data: null,
+          error: {
+            message: data?.error?.message || data?.message || "Failed to delete user",
+            status: res.status,
+          },
+        };
+      }
+
+      return {
+        data: data?.data || data,
+        error: null,
+      };
+    } catch (err: any) {
+      console.error("[deleteUser]", err);
+      return {
+        data: null,
+        error: { message: err.message || "Network or server error" },
+      };
+    }
+  },
+
+
+  
+
+
+
+
+
+   
+
+  
+
   
 
 };

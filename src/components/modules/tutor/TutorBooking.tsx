@@ -108,6 +108,10 @@ async function confirmBooking() {
     return;
   }
 
+  if(!user?.uniqueStatus){
+    toast.error("You account currently freeze by admin , please contact admin")
+  }
+
   const toastId = toast.loading("Sending booking request...");
 
   // ── Prepare payload ───────────────────────────────────────────
@@ -124,7 +128,9 @@ async function confirmBooking() {
   try {
     const res = await addBooking(bookingData);
 
-    console.log("API Response:", res);
+    // console.log("API Response:", res);
+
+    
   
 
     // Handle API response styles (adjust according to your actual API)

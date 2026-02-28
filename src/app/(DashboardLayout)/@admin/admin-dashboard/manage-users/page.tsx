@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { getAllUsers, updateUser } from "@/actions/user.action";
+import { getAllUsers, updateUser, deleteUser } from "@/actions/user.action";
 import {
   Table,
   TableBody,
@@ -180,22 +180,23 @@ export default function ManageUsers() {
   const handleEdit = (id: string) => toast.info(`Editing user: ${id}`);
 
 
-   const handleDelete = async (bookingId: string) => {
-        //  try {
-        //    await toast.promise(
-        //      deleteBooking(bookingId),
-        //      {
-        //        loading: "Deleting booking...",
-        //        success: <b>Booking successfully deleted!</b>,
-        //        error: (err) => <b>{err.message || "Failed to delete booking"}</b>,
-        //      }
-        //    );
+   const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this user?")) return;
+         try {
+           await toast.promise(
+             deleteUser(id),
+             {
+               loading: "Deleting user...",
+               success: <b>user successfully deleted!</b>,
+               error: (err) => <b>{err.message || "Failed to delete user"}</b>,
+             }
+           );
            
-        //    await refreshBookings();
-        //  } catch (error) {
+           await refreshUsers();
+         } catch (error) {
          
-        //    await refreshBookings(); 
-        //  }
+           await refreshUsers();
+         }
        };
 
   if (error) {
@@ -392,7 +393,9 @@ export default function ManageUsers() {
 
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Switch
+                        {
+                          user.role === "STUDENT" && (
+                            <Switch
                           checked={user.uniqueStatus ?? false}
                           onCheckedChange={() =>
                             handleToggleStatus(
@@ -402,6 +405,8 @@ export default function ManageUsers() {
                           }
                           aria-label="Toggle user status"
                         />
+                          )
+                        }
 
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -430,6 +435,7 @@ export default function ManageUsers() {
                               onClick={() => {
                                  handleDelete(user.id)
                               }}
+                              disabled={user.role === "ADMIN"}
                               className="text-red-600 focus:bg-red-50"
                             >
                               <Trash2 className="mr-2 h-4 w-4" />

@@ -24,3 +24,16 @@ export const getAllUsers = async () =>{
   return result; // { data, error }
 
 }
+
+export const deleteUser = async (id: string) => {
+  // console.log("[updateTutor] Updating tutor for user:", id);
+  const result = await userServices.deleteUser(id);
+    if (result?.error) {
+    throw new Error(result.error.message || "Failed to delete user");
+  }
+ 
+  return result; // { data, error }
+};
+
+
+

@@ -75,6 +75,7 @@ export default function ManageBookings() {
     }
   };
 
+
   // Initial load
   useEffect(() => {
     if (userId) {
