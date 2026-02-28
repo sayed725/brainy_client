@@ -6,7 +6,7 @@
 [![Better Auth](https://img.shields.io/badge/Auth-Better%20Auth-7C3AED)](https://better-auth.com/)
 [![Framer Motion](https://img.shields.io/badge/Animations-Framer%20Motion-0055FF?logo=framer)](https://www.framer.com/motion/)
 
-Brainy is a modern, full-featured **online tutoring marketplace**. This repository contains the **Frontend Client**, built for visual excellence, snappy interactions, and strict role-based security across three distinct user tiers: Students, Tutors, and Administrators.
+Brainy is a modern, full-featured **online tutoring marketplace and skill sharing**. This repository contains the **Frontend Client**, built for visual excellence, snappy interactions, and strict role-based security across three distinct user tiers: Students, Tutors, and Administrators.
 
 ---
 
