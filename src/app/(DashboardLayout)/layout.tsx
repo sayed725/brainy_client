@@ -20,6 +20,7 @@ import { cookies } from "next/headers";
 import { headers } from "next/headers";
 
 export default async function DashboardLayout({
+  children,
   admin,
   user,
   tutor
@@ -85,7 +86,7 @@ export default async function DashboardLayout({
             </BreadcrumbList>
           </Breadcrumb> */}
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="fflex-1 overflow-y-auto p-3 md:p-4 lg:p-6">
           {userInfo.role === 'STUDENT' ? user : userInfo.role === 'ADMIN' ? admin : userInfo.role === 'TUTOR' ? tutor : user}
         </div>
       </SidebarInset>

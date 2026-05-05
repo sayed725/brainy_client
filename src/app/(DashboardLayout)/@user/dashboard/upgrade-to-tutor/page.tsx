@@ -139,19 +139,21 @@ export default function StudentProfile() {
 
   if (!session || !user) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 text-center">
-        <div className="rounded-full bg-muted/60 p-8">
-          <User className="h-16 w-16 text-muted-foreground" />
+      <div className="flex min-h-[70vh] flex-col items-center justify-center gap-8 px-4 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="relative">
+          <div className="absolute -inset-4 bg-[#1cb89e]/20 blur-3xl rounded-full opacity-50" />
+          <div className="relative rounded-3xl bg-card border border-border/50 p-8 shadow-2xl">
+            <User className="h-16 w-16 text-[#1cb89e]" />
+          </div>
         </div>
-        <div className="space-y-3">
-          <h2 className="text-2xl font-bold">You're not signed in</h2>
-          <p className="text-muted-foreground max-w-md">
-            Sign in to view and update your profile, manage your account, and
-            access all features.
+        <div className="space-y-3 max-w-md">
+          <h2 className="text-3xl font-black tracking-tight">Access Denied</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Please sign in to your account to update your profile and begin your journey as a mentor on our platform.
           </p>
         </div>
-        <Button asChild size="lg" className="bg-teal-600 hover:bg-teal-700">
-          <a href="/sign-in">Sign In</a>
+        <Button asChild size="lg" className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white font-bold h-12 px-10 rounded-2xl shadow-lg shadow-[#1cb89e]/20 transition-all active:scale-95">
+          <a href="/login">Sign In Now</a>
         </Button>
       </div>
     );
@@ -164,35 +166,25 @@ export default function StudentProfile() {
     return isValid(date) ? format(date, "d MMMM yyyy") : "—";
   };
 
-  // First letter for avatar fallback
-  const userInitial =
-    user.name?.charAt(0)?.toUpperCase() ||
-    user.email?.charAt(0)?.toUpperCase() ||
-    "?";
-
-  const phoneNumber = "Not available"; // ← replace with real phone logic later
-
-  const handlePassChange = () => {
-    toast.success("Feature coming soon!");
-  };
-
   return (
-    <div className="px-0 lg:px-5 pb-12 max-w-screen-2xl">
+    <div className="pb-16 max-w-screen-2xl mx-auto space-y-8 animate-in fade-in duration-500">
       <DashboardPagesHeader
-        title="Update Profile"
-        subtitle="Update Your Information to become a Tutor"
+        title="Mentor Application"
+        subtitle="Complete your profile details to start sharing your knowledge with students"
         icon={User}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 xl:grid-cols-4 gap-8">
-        {/* Left Column */}
-       {/* Left sidebar */}
-        <div className="lg:col-span-2 xl:col-span-1 space-y-6">
-          <ProfileCard user={session.user} />
-          <AccountInfoCard user={session.user} createdAt={session.user.createdAt} />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Column - Profile Summary */}
+        <div className="lg:col-span-4 xl:col-span-3 space-y-6">
+          <div className="sticky top-24 space-y-6">
+            <ProfileCard user={session.user} />
+            <AccountInfoCard user={session.user} createdAt={session.user.createdAt} />
+          </div>
         </div>
 
-        <div className="lg:col-span-3 xl:col-span-3  space-y-6 ">
+        {/* Right Column - Application Form */}
+        <div className="lg:col-span-8 xl:col-span-9 space-y-6">
            <TutorFormCard user={session.user} refetch={refetch} />
         </div>
       </div>

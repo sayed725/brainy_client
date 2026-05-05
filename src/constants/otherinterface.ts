@@ -6,7 +6,7 @@ export interface Booking {
   endTime: string;
   createdAt: string;
   updatedAt: string;
-  user: { name: string; id: string; image: string | null };
+  user: { name: string; id: string; email: string; image: string | null };
    tutorId: string;
    userId: string;
   status: string; // "PENDING" | "CONFIRMED" | "CANCELLED"

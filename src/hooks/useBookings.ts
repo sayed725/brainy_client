@@ -3,17 +3,27 @@ import { fetchApi } from "@/lib/fetch-api";
 import { Booking } from "@/constants/otherinterface";
 
 // Helper to reliably extract array data from various possible response structures
-const extractData = (result: any): any[] => {
+export const extractData = (result: any): any[] => {
   const data = result?.data?.data || result?.data || result;
   return Array.isArray(data) ? data : [];
 };
 
-export function useAllBookings() {
+export function useAllBookings(params: Record<string, any> = {}) {
+  const queryParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      queryParams.append(key, value);
+    }
+  });
+
+  const queryString = queryParams.toString();
+  const url = `/api/v1/booking${queryString ? `?${queryString}` : ""}`;
+
   return useQuery({
-    queryKey: ["bookings"],
+    queryKey: ["bookings", params],
     queryFn: async () => {
-      const result = await fetchApi("/api/v1/booking");
-      return extractData(result) as Booking[];
+      const result = await fetchApi(url);
+      return result as any;
     },
   });
 }
@@ -23,7 +33,7 @@ export function useUserBookings(userId?: string) {
     queryKey: ["bookings", "user", userId],
     queryFn: async () => {
       if (!userId) return [];
-      const result = await fetchApi(`/api/v1/booking/byUserId/${userId}`);
+      const result = await fetchApi(`/api/v1/booking?userId=${userId}`);
       return extractData(result) as Booking[];
     },
     enabled: !!userId,
@@ -35,7 +45,7 @@ export function useTutorBookings(tutorId?: string) {
     queryKey: ["bookings", "tutor", tutorId],
     queryFn: async () => {
       if (!tutorId) return [];
-      const result = await fetchApi(`/api/v1/booking/byTutorId/${tutorId}`);
+      const result = await fetchApi(`/api/v1/booking?tutorId=${tutorId}`);
       return extractData(result) as Booking[];
     },
     enabled: !!tutorId,

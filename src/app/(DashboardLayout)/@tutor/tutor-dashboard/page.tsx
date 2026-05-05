@@ -78,189 +78,202 @@ export default function TutorDashboard() {
    };
 
    return (
-     <div className="px-0 lg:px-6 pb-16">
-       {/* Header */}
-       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-         <DashboardPagesHeader
-           title={"My Tutor Profile"}
-           subtitle={"Manage and showcase your teaching profile"}
-           icon={User2}
-         />
-
-         {/* Controlled Dialog */}
-         <Dialog open={open} onOpenChange={setOpen}>
-           <DialogTrigger asChild>
-             <Button variant="outline" className="gap-2">
-               <Edit2 className="h-4 w-4" />
-               Edit Profile
-             </Button>
-           </DialogTrigger>
-
-           <EditTutorModalContent
-             tutor={tutor}
-             close={() => setOpen(false)}
-             onSuccess={handleSuccess}
-           />
-         </Dialog>
-       </div>
-
-       {/* Main Profile Card */}
-       <Card className="border shadow-sm">
-         <CardHeader className="pb-6">
-           <div className="flex flex-col md:flex-row md:items-start gap-6">
-             <div className="shrink-0">
-               <img
-                 src={
-                   tutor.poster ??
-                   `https://ui-avatars.com/api/?name=${encodeURIComponent(tutor.user?.name ?? "Tutor")}&background=random&color=fff&size=160`
-                 }
-                 alt={tutor.user?.name ?? "Tutor"}
-                 className="h-32 w-32 rounded-full object-cover border-4 border-primary/30 shadow-md"
-               />
-             </div>
-
-             <div className="flex-1 space-y-4">
-               <div>
-                 <h2 className="text-2xl md:text-3xl font-bold">
-                   {tutor.user?.name ?? "Tutor Name"}
-                 </h2>
-                 <p className="text-xl text-primary font-medium mt-1">
-                   {tutor.title ?? "Full-Stack Tutor"}
-                 </p>
+      <div className="pb-16 max-w-screen-2xl mx-auto space-y-4">
+        {/* Header with Breadcrumbs/Title */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <DashboardPagesHeader
+            title="Tutor Profile Center"
+            subtitle="Manage your public profile and track your teaching performance"
+            icon={User2}
+          />
+ 
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="h-12 px-6 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white font-black rounded-2xl shadow-xl shadow-[#1cb89e]/20 transition-all active:scale-95 gap-2">
+                <Edit2 className="h-4 w-4" />
+                Edit Profile
+              </Button>
+            </DialogTrigger>
+ 
+            <EditTutorModalContent
+              tutor={tutor}
+              close={() => setOpen(false)}
+              onSuccess={handleSuccess}
+            />
+          </Dialog>
+        </div>
+ 
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+          {/* Left Column: Stats & Profile Info */}
+          <div className="lg:col-span-8 space-y-3">
+            {/* Main Profile Card */}
+            <Card className="border-none shadow-2xl bg-card/50 backdrop-blur-xl rounded-[2.5rem] overflow-hidden">
+               {/* Cover Image/Header */}
+               <div className="h-40 bg-gradient-to-br from-[#1cb89e] to-[#128c78] relative">
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
                </div>
 
-               <div className="flex flex-wrap items-center gap-4">
-                 <div className="flex items-center gap-1.5">
-                   <Star className="h-5 w-5 fill-yellow-500 text-yellow-500" />
-                   <span className="font-semibold text-lg">
-                     {tutor.averageRating?.toFixed(1) ?? "—"}
-                   </span>
-                   <span className="text-muted-foreground text-sm">
-                     ({tutor.totalBookIng ?? 0} reviews)
-                   </span>
-                 </div>
+               <CardContent className="pt-0 relative px-6 md:px-10 pb-10">
+                  <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-15 relative z-10">
+                     <div className="relative group">
+                        <div className="absolute inset-0 bg-[#1cb89e] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity" />
+                        <img
+                          src={
+                            tutor.poster ??
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(tutor.user?.name ?? "Tutor")}&background=random&color=fff&size=200`
+                          }
+                          alt={tutor.user?.name ?? "Tutor"}
+                          className="h-40 w-40 rounded-full object-cover border-[6px] border-background shadow-2xl relative z-10 transition-transform duration-500 group-hover:scale-105"
+                        />
+                     </div>
 
-                 <Badge variant="secondary" className="text-base px-4 py-1">
-                   {tutor.categories?.name ?? "Category"}
-                 </Badge>
+                     <div className="flex-1 space-y-3 mb-2">
+                        <div className="flex flex-wrap items-center gap-3">
+                           <h2 className="text-3xl md:text-4xl font-black tracking-tight">
+                             {tutor.user?.name ?? "Tutor Name"}
+                           </h2>
+                           <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                             <Star className="h-4 w-4 fill-amber-500" />
+                             <span className="text-sm font-black">{tutor.averageRating?.toFixed(1) ?? "—"}</span>
+                           </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                           <p className="text-xl font-bold text-[#1cb89e]">
+                             {tutor.title ?? "Full-Stack Tutor"}
+                           </p>
+                           <span className="text-muted-foreground">•</span>
+                           <Badge variant="secondary" className="bg-[#1cb89e]/10 text-[#1cb89e] border-[#1cb89e]/10 rounded-lg px-3">
+                             {tutor.categories?.name ?? "Category"}
+                           </Badge>
+                        </div>
+                     </div>
 
-                 {tutor.availability ? (
-                   <Badge
-                     variant="outline"
-                     className="bg-green-50 text-green-700 border-green-200"
-                   >
-                     Available Now
-                   </Badge>
-                 ):
-                  <Badge
-                     variant="outline"
-                     className="bg-red-50 text-black border-red-200"
-                   >
-                     Un Available
-                   </Badge>
-                 }
-               </div>
+                     <div className="mb-4">
+                        {tutor.availability ? (
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-black text-xs uppercase tracking-widest">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            Available Now
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-rose-500/10 text-rose-500 border border-rose-500/20 font-black text-xs uppercase tracking-widest">
+                            Currently Unavailable
+                          </div>
+                        )}
+                     </div>
+                  </div>
 
-               <div className="flex flex-wrap gap-6 text-sm">
-                 <div className="flex items-center gap-2">
-                   <DollarSign className="h-4 w-4 text-primary" />
-                   <span className="font-medium">
-                     ${tutor.rate ?? "?"} / hour
-                   </span>
-                 </div>
-                 <div className="flex items-center gap-2">
-                   <BookOpen className="h-4 w-4 text-primary" />
-                   <span>{tutor.totalBookIng ?? 0} bookings</span>
-                 </div>
-                 <div className="flex items-center gap-2">
-                   <Clock className="h-4 w-4 text-primary" />
-                   <span>{formatTimeSlots(tutor.timeSlots)} preferred</span>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </CardHeader>
+                  <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <div className="p-6 rounded-3xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
+                       <DollarSign className="h-5 w-5 text-[#1cb89e] mb-3" />
+                       <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Hourly Rate</p>
+                       <p className="text-xl font-black">${tutor.rate ?? "?"} <span className="text-xs text-muted-foreground">/ hour</span></p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
+                       <BookOpen className="h-5 w-5 text-[#1cb89e] mb-3" />
+                       <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Sessions</p>
+                       <p className="text-xl font-black">{tutor.totalBookIng ?? 0} <span className="text-xs text-muted-foreground">Bookings</span></p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
+                       <Clock className="h-5 w-5 text-[#1cb89e] mb-3" />
+                       <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Preferences</p>
+                       <p className="text-xs font-bold truncate">{formatTimeSlots(tutor.timeSlots)}</p>
+                    </div>
+                  </div>
 
-         <CardContent className="space-y-10 pt-2">
-           <div>
-             <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-               <User className="h-5 w-5" />
-               About Me
-             </h3>
-             <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-               {tutor.bio ?? "No bio provided yet."}
-             </p>
-           </div>
+                  <div className="mt-12 space-y-6">
+                    <div>
+                      <h3 className="text-lg font-black uppercase tracking-tighter mb-4 flex items-center gap-2">
+                        <Award className="h-5 w-5 text-[#1cb89e]" />
+                        Professional Bio
+                      </h3>
+                      <div className="p-8 rounded-[2rem] bg-muted/20 border border-border/30 relative">
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-lg italic font-medium italic">
+                          &ldquo;{tutor.bio ?? "No bio provided yet."}&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+               </CardContent>
+            </Card>
+          </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <div className="flex items-start gap-4">
-               <Mail className="h-5 w-5 text-[#1cb89e] mt-0.5" />
-               <div>
-                 <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                   Email
-                 </p>
-                 <p className="font-medium">{tutor.user?.email ?? "—"}</p>
-               </div>
-             </div>
+          {/* Right Column: Contact & Quick Stats */}
+          <div className="lg:col-span-4 space-y-6">
+             <Card className="border-none shadow-xl bg-card rounded-[2.5rem] overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border/50 p-8">
+                   <CardTitle className="text-xl font-black flex items-center gap-2">
+                      <Mail className="h-5 w-5 text-[#1cb89e]" />
+                      Contact Details
+                   </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 space-y-6">
+                   <div className="flex items-center gap-4 group">
+                      <div className="p-3 rounded-2xl bg-[#1cb89e]/10 text-[#1cb89e] group-hover:scale-110 transition-transform">
+                         <Mail className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Email Address</p>
+                         <p className="font-bold truncate">{tutor.user?.email ?? "—"}</p>
+                      </div>
+                   </div>
 
-             <div className="flex items-start gap-4">
-               <Phone className="h-5 w-5 text-[#1cb89e] mt-0.5" />
-               <div>
-                 <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                   Phone
-                 </p>
-                 <p className="font-medium">+880 123 456 789</p>
-               </div>
-             </div>
+                   <div className="flex items-center gap-4 group">
+                      <div className="p-3 rounded-2xl bg-[#1cb89e]/10 text-[#1cb89e] group-hover:scale-110 transition-transform">
+                         <Phone className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Phone Number</p>
+                         <p className="font-bold">+880 123 456 789</p>
+                      </div>
+                   </div>
 
-             <div className="flex items-start gap-4">
-               <MapPin className="h-5 w-5 text-[#1cb89e] mt-0.5" />
-               <div>
-                 <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                   Location
-                 </p>
-                 <p className="font-medium">Shibganj, Rajshahi</p>
-               </div>
-             </div>
-           </div>
+                   <div className="flex items-center gap-4 group">
+                      <div className="p-3 rounded-2xl bg-[#1cb89e]/10 text-[#1cb89e] group-hover:scale-110 transition-transform">
+                         <MapPin className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Base Location</p>
+                         <p className="font-bold">Shibganj, Rajshahi</p>
+                      </div>
+                   </div>
+                </CardContent>
+             </Card>
 
-           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-             <StatCard
-               icon={<DollarSign className="h-5 w-5 text-[#1cb89e]" />}
-               value={`$${tutor.rate ?? "?"}`}
-               label="Hourly Rate"
-             />
-             <StatCard
-               icon={<BookOpen className="h-5 w-5 text-[#1cb89e]" />}
-               value={tutor.totalBookIng ?? 0}
-               label="Total Bookings"
-             />
-             <StatCard
-               icon={<Star className="h-5 w-5 text-[#1cb89e]" />}
-               value={tutor.averageRating?.toFixed(1) ?? "—"}
-               label="Average Rating"
-             />
-             <StatCard
-               icon={<Calendar className="h-5 w-5 text-[#1cb89e]" />}
-               value="—"
-               label="This Month Hours"
-             />
-           </div>
+             <Card className="border-none shadow-xl bg-card rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-muted/50 to-background">
+                <CardContent className="p-8">
+                   <div className="space-y-6">
+                      <div className="flex items-center gap-4">
+                        <div className="p-4 rounded-[1.5rem] bg-background shadow-xl text-[#1cb89e]">
+                           <Award className="h-8 w-8" />
+                        </div>
+                        <div>
+                           <p className="text-xl font-black">Performance</p>
+                           <p className="text-sm text-muted-foreground">Certified Mentor</p>
+                        </div>
+                      </div>
 
-           <div className="text-sm text-muted-foreground border-t pt-6">
-             <p>
-               Tutor since{" "}
-               {new Date(tutor.createdAt).toLocaleDateString("en-US", {
-                 month: "long",
-                 year: "numeric",
-               })}
-             </p>
-             <p className="mt-1">
-               Last updated {tutor.updatedAt && moment(tutor.updatedAt).fromNow()}
-             </p>
-           </div>
-         </CardContent>
-       </Card>
-     </div>
+                      <div className="pt-4 border-t border-border/50">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Member Since</p>
+                        <p className="text-lg font-black text-foreground">
+                           {new Date(tutor.createdAt).toLocaleDateString("en-US", {
+                             month: "long",
+                             year: "numeric",
+                           })}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-border/50">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Account Status</p>
+                        <div className="flex items-center gap-2">
+                           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                           <span className="font-black text-emerald-500 uppercase tracking-tighter">Verified Provider</span>
+                        </div>
+                      </div>
+                   </div>
+                </CardContent>
+             </Card>
+          </div>
+        </div>
+      </div>
    );
 }
