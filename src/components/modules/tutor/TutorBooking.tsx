@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import { format, differenceInCalendarDays } from "date-fns";
 import { toast } from "sonner";
 import { Tutor } from "@/app/(CommonLayout)/tutors/[id]/page";
 import { authClient } from "@/lib/auth-client";
-import { useCreateBooking } from "@/hooks/useBookings";
+import { useCreateBooking, useUserBookings } from "@/hooks/useBookings";
+
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 
 // Time slot mapping (unchanged)
@@ -50,6 +53,9 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = session?.user;
   
+  const { data: userBookings = [] } = useUserBookings(user?.id);
+  const hasAlreadyBooked = userBookings.some((b) => b.tutorId === tutor.id);
+
   const createBookingMutation = useCreateBooking();
 
   // console.log("TutorBooking Props:", { tutor, session, isPending });
@@ -65,6 +71,7 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
 
   
 
+  
 
 
   // console.log("Current User:", user);
@@ -155,6 +162,61 @@ async function confirmBooking() {
   }
 }
 
+  if (isPending) {
+    return (
+      <div className="rounded-xl border border-border bg-card p-12 flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1cb89e] border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="rounded-xl border border-border bg-card p-10 text-center">
+        <div className="mx-auto w-16 h-16 bg-[#1cb89e]/10 rounded-full flex items-center justify-center mb-4">
+          <CalendarDays className="h-8 w-8 text-[#1cb89e]" />
+        </div>
+        <h3 className="text-xl font-bold text-foreground">Sign in to Book a Session</h3>
+        <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
+          Start your learning journey with {tutor.user.name} by logging into your account.
+        </p>
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button asChild className="w-full sm:w-auto bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white px-8">
+            <Link href="/login">Login to Book</Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full sm:w-auto">
+            <Link href="/register">Create Account</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (hasAlreadyBooked && !booked) {
+    return (
+      <div className="rounded-xl border border-border bg-card p-8 text-center shadow-sm">
+        <div className="mx-auto w-16 h-16 rounded-full bg-[#1cb89e]/10 flex items-center justify-center mb-6">
+          <CheckCircle2 className="h-10 w-10 text-[#1cb89e]" />
+        </div>
+        <h3 className="text-xl font-bold text-foreground">
+          Tutor Already Booked
+        </h3>
+        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+          You have already secured a booking with <span className="font-semibold text-foreground">{tutor.user.name}</span>. 
+          Check your dashboard for details or try exploring other expert tutors!
+        </p>
+        <div className="mt-8 space-y-3">
+          <Button asChild className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white font-bold h-12 shadow-md">
+             <Link href="/tutors">Find More Tutors</Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full h-12">
+             <Link href="/dashboard">View My Bookings</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (booked) {
     return (
       <div className="rounded-xl border border-border bg-card p-8 text-center">
@@ -172,16 +234,6 @@ async function confirmBooking() {
         <p className="mt-1 text-sm text-muted-foreground">
           A confirmation will be sent to your email.
         </p>
-        {/* <Button
-          variant="outline"
-          className="mt-6 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
-          onClick={() => {
-            setBooked(false);
-            setSelectedSlot(null);
-          }}
-        >
-          Book Another Slot
-        </Button> */}
       </div>
     );
   }
@@ -245,60 +297,94 @@ async function confirmBooking() {
 
       {/* Booking Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Book Session with {tutor.user.name}</DialogTitle>
-          </DialogHeader>
+        <DialogContent className="max-w-[95vw] lg:max-w-4xl xl:max-w-5xl w-full p-0 overflow-hidden border-none shadow-2xl rounded-2xl">
+          <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-y-auto">
+            
+            {/* Left Side: Calendars */}
+            <div className="flex-1 p-6 md:p-10 bg-background">
+              <DialogHeader className="mb-8 text-center md:text-left">
+                <DialogTitle className="text-2xl md:text-3xl font-bold flex items-center justify-center md:justify-start gap-3">
+                  <CalendarDays className="h-7 w-7 text-[#1cb89e]" />
+                  Select Your Dates
+                </DialogTitle>
+                <DialogDescription className="text-base mt-2">
+                  Choose the duration for your mentorship with {tutor.user.name}.
+                </DialogDescription>
+              </DialogHeader>
 
-          <div className="grid gap-6 py-4">
-            {/* Start Date */}
-            <div className="grid gap-2">
-              <Label>Select Start Date</Label>
-              <Calendar
-                mode="single"
-                selected={startDate}
-                onSelect={setStartDate}
-                disabled={(date) => date < new Date()}
-                initialFocus
-              />
-            </div>
-
-            {/* End Date */}
-            <div className="grid gap-2">
-              <Label>Select End Date</Label>
-              <Calendar
-                mode="single"
-                selected={endDate}
-                onSelect={setEndDate}
-                disabled={(date) => date < (startDate || new Date())}
-                initialFocus
-              />
-            </div>
-
-            {/* Price Calculation - day-based (4 hours per day) */}
-            {startDate && endDate && (
-              <div className="text-sm font-medium text-center mt-2">
-                Estimated Price:{" "}
-                <span className="text-[#1cb89e] font-semibold">${totalPrice}</span>
-                <span className="text-xs text-muted-foreground ml-2">
-                  ({differenceInCalendarDays(endDate, startDate) + 1} day(s) × 4 hours × ${tutor.rate}/hr)
-                </span>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 md:gap-10 justify-items-center">
+                <div className="space-y-4 w-full max-w-[320px]">
+                  <Label className="text-sm font-bold text-foreground ml-1">Start Date</Label>
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={setStartDate}
+                    disabled={(date) => date < new Date()}
+                    className="rounded-2xl border border-border shadow-sm p-4 w-full bg-card"
+                  />
+                </div>
+                <div className="space-y-4 w-full max-w-[320px]">
+                  <Label className="text-sm font-bold text-foreground ml-1">End Date</Label>
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={setEndDate}
+                    disabled={(date) => date < (startDate || new Date())}
+                    className="rounded-2xl border border-border shadow-sm p-4 w-full bg-card"
+                  />
+                </div>
               </div>
-            )}
-          </div>
+            </div>
 
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button
-              onClick={confirmBooking}
-              disabled={!startDate || !endDate || totalPrice <= 0}
-              className="bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
-            >
-              Confirm Booking ${totalPrice}
-            </Button>
-          </DialogFooter>
+            {/* Right Side: Summary */}
+            <div className="w-full md:w-80 xl:w-96 bg-slate-50 dark:bg-slate-900/50 p-6 md:p-10 border-t md:border-t-0 md:border-l border-border flex flex-col justify-between shrink-0">
+              <div className="space-y-6">
+                <h4 className="text-lg font-bold text-foreground">Booking Summary</h4>
+                
+                <div className="space-y-4">
+                  <div className="p-4 rounded-xl bg-background border border-border space-y-3 shadow-sm">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Rate</span>
+                      <span className="font-bold">${tutor.rate}/hr</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Session</span>
+                      <span className="font-bold text-[#1cb89e]">{timeSlotInfo[selectedSlot!]?.label || selectedSlot}</span>
+                    </div>
+                    <Separator className="opacity-50" />
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Total Days</span>
+                      <span className="font-bold">{startDate && endDate ? differenceInCalendarDays(endDate, startDate) + 1 : 0} Day(s)</span>
+                    </div>
+                  </div>
+
+                  {startDate && endDate && (
+                    <div className="p-4 rounded-xl bg-[#1cb89e]/5 border border-[#1cb89e]/20 space-y-1">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Total Price</p>
+                      <div className="text-3xl font-black text-[#1cb89e]">${totalPrice}</div>
+                      <p className="text-[10px] text-muted-foreground italic">Inclusive of all platform fees</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-3 mt-8">
+                <Button
+                  onClick={confirmBooking}
+                  disabled={!startDate || !endDate || totalPrice <= 0}
+                  className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white h-12 text-base font-bold shadow-lg shadow-[#1cb89e]/20 transition-all active:scale-95"
+                >
+                  Confirm & Pay
+                </Button>
+                <DialogClose asChild>
+                  <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground">
+                    Cancel
+                  </Button>
+                </DialogClose>
+              </div>
+            </div>
+
+          </div>
         </DialogContent>
       </Dialog>
     </div>

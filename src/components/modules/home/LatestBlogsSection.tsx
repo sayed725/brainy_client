@@ -36,6 +36,15 @@ const BLOG_POSTS = [
     excerpt:
       "A strategic guide to prioritizing subjects and maximizing your scores in upcoming board examinations.",
   },
+   {
+    title: "How to Choose the Best Online Tutor for Your Child in 2025",
+    category: "Online Learning",
+    date: "July 15, 2025",
+    imageUrl:
+      "https://img.freepik.com/free-photo/schoolgirl-writing-while-having-online-class-with-her-teacher-laptop-due-virus-pandemic_637285-9416.jpg",
+    excerpt:
+      "Discover key tips and factors to consider when selecting the ideal online tutor for your child's academic success.",
+  },
 ];
 
 const containerVariants: Variants = {
@@ -70,7 +79,7 @@ export default function LatestBlogsSection() {
 
         {/* Blog Cards */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

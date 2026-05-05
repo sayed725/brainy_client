@@ -138,7 +138,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky  top-0 z-50 border-b bg-gray-100 dark:bg-gray-950 backdrop-blur-md">
-      <div className="container mx-auto w-11/12 lg:w-full px-0 py-3">
+      <div className="container mx-auto w-11/12 lg:w-full px-0 py-2">
         <div className="flex items-center justify-between">
           {/* Logo – unchanged */}
           <Link href="/" className="flex items-center gap-3">
@@ -304,120 +304,122 @@ export default function Navbar() {
                 </AvatarFallback>
               </Avatar>
             )}
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-10 w-10" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-75] sm:w-100">
-                <SheetTitle className="sr-only">
-                  Main Navigation Menu
-                </SheetTitle>
-                <SheetHeader className="mb-8">
-                  <Link
-                    href="/"
-                    className="flex items-center gap-3"
-                    onClick={closeMobileMenu}
-                  >
-                    <img
-                      src="/brainy_logo-removebg-preview.png"
-                      alt="Brainy Logo"
-                      className="h-10 w-10"
-                    />
-                    <span className="text-2xl font-bold">Brainy</span>
-                  </Link>
-                </SheetHeader>
+            {mounted && (
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-10 w-10" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[75%] sm:w-[400px]">
+                  <SheetTitle className="sr-only">
+                    Main Navigation Menu
+                  </SheetTitle>
+                  <SheetHeader className="mb-8">
+                    <Link
+                      href="/"
+                      className="flex items-center gap-3"
+                      onClick={closeMobileMenu}
+                    >
+                      <img
+                        src="/brainy_logo-removebg-preview.png"
+                        alt="Brainy Logo"
+                        className="h-10 w-10"
+                      />
+                      <span className="text-2xl font-bold">Brainy</span>
+                    </Link>
+                  </SheetHeader>
 
-                <nav className="flex flex-col gap-6 ml-5">
-                  {menuItems.map((item) => (
-                    <div key={item.title} className="space-y-3">
-                      <Link
-                        href={item.href}
-                        onClick={closeMobileMenu}
-                        className={cn(
-                          "text-lg font-bold transition-colors flex items-center justify-between",
-                          pathname === item.href
-                            ? "text-[#1cb89e]"
-                            : "text-foreground/80 hover:text-[#1cb89e]",
-                        )}
-                      >
-                        {item.title}
-                      </Link>
-                      
-                      {item.subItems && (
-                        <div className="flex flex-col gap-3 ml-4 border-l pl-4">
-                          {item.subItems.map((subItem) => (
+                  <nav className="flex flex-col gap-6 ml-5">
+                    {menuItems.map((item) => (
+                      <div key={item.title} className="space-y-3">
+                        <Link
+                          href={item.href}
+                          onClick={closeMobileMenu}
+                          className={cn(
+                            "text-lg font-bold transition-colors flex items-center justify-between",
+                            pathname === item.href
+                              ? "text-[#1cb89e]"
+                              : "text-foreground/80 hover:text-[#1cb89e]",
+                          )}
+                        >
+                          {item.title}
+                        </Link>
+                        
+                        {item.subItems && (
+                          <div className="flex flex-col gap-3 ml-4 border-l pl-4">
+                            {item.subItems.map((subItem) => (
+                              <Link
+                                key={subItem.href}
+                                href={subItem.href}
+                                onClick={closeMobileMenu}
+                                className="text-sm text-muted-foreground hover:text-[#1cb89e] transition-colors"
+                              >
+                                {subItem.title}
+                              </Link>
+                            ))}
                             <Link
-                              key={subItem.href}
-                              href={subItem.href}
+                              href={item.href}
                               onClick={closeMobileMenu}
-                              className="text-sm text-muted-foreground hover:text-[#1cb89e] transition-colors"
+                              className="text-sm font-bold text-[#1cb89e]"
                             >
-                              {subItem.title}
+                              View All {item.title}
                             </Link>
-                          ))}
-                          <Link
-                            href={item.href}
-                            onClick={closeMobileMenu}
-                            className="text-sm font-bold text-[#1cb89e]"
-                          >
-                            View All {item.title}
-                          </Link>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                    <div className="border-t pt-6 mt-6 space-y-3">
+                      {mounted ? (
+                        isAuthenticated ? (
+                          <>
+                            <Link
+                              href={
+                                session?.user?.role === "tutor"
+                                  ? "/tutor-dashboard"
+                                  : session?.user?.role === "admin"
+                                    ? "/admin-dashboard"
+                                    : "/dashboard"
+                              }
+                              onClick={closeMobileMenu}
+                              className="flex items-center gap-3 text-lg"
+                            >
+                              <LayoutDashboard className="h-5 w-5" />
+                              Dashboard
+                            </Link>
+                            <button
+                              onClick={() => {
+                                handleLogout();
+                                closeMobileMenu();
+                              }}
+                              className="flex items-center gap-3 text-lg text-red-600 w-full text-left"
+                            >
+                              <LogOut className="h-5 w-5" />
+                              Log Out
+                            </button>
+                          </>
+                        ) : (
+                            <Button
+                              asChild
+                              className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
+                            >
+                              <Link href="/login" onClick={closeMobileMenu}>
+                                Login
+                              </Link>
+                            </Button>
+                        )
+                      ) : (
+                        <div className="space-y-3">
+                          <div className="w-full h-10 bg-muted animate-pulse rounded-md" />
+                          <div className="w-full h-10 bg-muted animate-pulse rounded-md" />
                         </div>
                       )}
                     </div>
-                  ))}
-
-                  <div className="border-t pt-6 mt-6 space-y-3">
-                    {mounted ? (
-                      isAuthenticated ? (
-                        <>
-                          <Link
-                            href={
-                              session?.user?.role === "tutor"
-                                ? "/tutor-dashboard"
-                                : session?.user?.role === "admin"
-                                  ? "/admin-dashboard"
-                                  : "/dashboard"
-                            }
-                            onClick={closeMobileMenu}
-                            className="flex items-center gap-3 text-lg"
-                          >
-                            <LayoutDashboard className="h-5 w-5" />
-                            Dashboard
-                          </Link>
-                          <button
-                            onClick={() => {
-                              handleLogout();
-                              closeMobileMenu();
-                            }}
-                            className="flex items-center gap-3 text-lg text-red-600 w-full text-left"
-                          >
-                            <LogOut className="h-5 w-5" />
-                            Log Out
-                          </button>
-                        </>
-                      ) : (
-                          <Button
-                            asChild
-                            className="w-full bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white"
-                          >
-                            <Link href="/login" onClick={closeMobileMenu}>
-                              Login
-                            </Link>
-                          </Button>
-                      )
-                    ) : (
-                      <div className="space-y-3">
-                        <div className="w-full h-10 bg-muted animate-pulse rounded-md" />
-                        <div className="w-full h-10 bg-muted animate-pulse rounded-md" />
-                      </div>
-                    )}
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            )}
           </div>
         </div>
       </div>
