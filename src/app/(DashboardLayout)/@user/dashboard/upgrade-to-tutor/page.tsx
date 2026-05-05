@@ -43,7 +43,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { getCategories } from "@/actions/category.action";
 import {
   Select,
   SelectContent,
@@ -52,7 +51,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { addTutor } from "@/actions/tutor.action";
+
 import { redirect, useRouter } from "next/navigation";
 import ProfileCard from "@/components/UserProfile/ProfileCard";
 import AccountInfoCard from "@/components/UserProfile/AccountInfoCard";
@@ -73,21 +72,7 @@ export default function StudentProfile() {
   const { data: session, isPending, refetch } = authClient.useSession();
     const router = useRouter();
 
-  const [categories, setCategories] = useState<any[]>([]);
-  const [error, setError] = useState<{ message: string } | null>(null);
 
-  //   console.log(categories, error);
-
-  useEffect(() => {
-    async function load() {
-      const { data, error } = await getCategories();
-      setCategories(data.data);
-      setError(error);
-    }
-    load();
-  }, []);
-
-  //   console.log(categories);
   const timeSlots = ["MORNING", "AFTERNOON", "EVENING", "NIGHT"] as const;
 
   const user = session?.user;

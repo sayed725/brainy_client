@@ -14,7 +14,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import { userServices } from "@/services/user.service";
+import { cookies } from "next/headers";
 
 
 import { headers } from "next/headers";
@@ -31,15 +31,33 @@ export default async function DashboardLayout({
 }) {
   
 
-    const { data } = await userServices.getSession()
+  const cookieStore = await cookies();
+  const authUrl = process.env.AUTH_URL;
+  let sessionData = null;
 
-    if (!data || !data.user) {
-      // If there's no session or user data, you might want to redirect to login or show an error
-      // For example:
-      // redirect("/login");
-      return <div className="p-4">You must be logged in to access the dashboard.</div>;
+  if (authUrl) {
+    try {
+      const res = await fetch(`${authUrl}/get-session`, {
+        method: "GET",
+        headers: {
+          Cookie: cookieStore.getAll().map((c) => `${c.name}=${c.value}`).join("; "),
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      });
+      if (res.ok) {
+        sessionData = await res.json();
+      }
+    } catch (err) {
+      console.error("Failed to fetch session:", err);
     }
- const userInfo = { ...data.user, role: data.user.role || 'STUDENT' }
+  }
+
+  if (!sessionData || !sessionData.user) {
+    return <div className="p-4">You must be logged in to access the dashboard.</div>;
+  }
+  
+  const userInfo = { ...sessionData.user, role: sessionData.user.role || 'STUDENT' };
 
 //  console.log(userInfo)
 

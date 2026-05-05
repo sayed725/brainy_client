@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/table"
 import { toast } from "sonner"
 
-import { getallAdminData } from "@/actions/admin.action"
+import { useAdminData } from "@/hooks/useAdmin"
 import { AdminDashboardData } from "@/constants/otherinterface"
 import { authClient } from "@/lib/auth-client"
 
@@ -47,42 +47,14 @@ const formatCurrency = (amount: number) => {
 
 export default function AdminDashboard() {
   const { data: session, isPending: isSessionLoading } = authClient.useSession()
-  
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [stats, setStats] = useState<AdminDashboardData | null>(null)
-
   const userId = session?.user?.id
 
-  const fetchAdminData = async () => {
-    if (!userId) return
-
-    setLoading(true)
-    setError(null)
-
-    try {
-      const result = await getallAdminData()
-      if (result.error) {
-        throw new Error(result.error)
-      }
-      setStats(result.data)
-    } catch (err: any) {
-      const msg = err.message || "Failed to load dashboard data"
-      setError(msg)
-      toast.error(msg)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (userId) {
-      fetchAdminData()
-    }
-  }, [userId])
+  const { data: stats, isLoading: isDataLoading, error: queryError, refetch } = useAdminData()
+  const error = queryError ? queryError.message || "Failed to load dashboard data" : null
+  const loading = isDataLoading || (userId && !stats && !error);
 
   const handleRefresh = () => {
-    fetchAdminData()
+    refetch()
     toast.info("Refreshing dashboard...")
   }
 

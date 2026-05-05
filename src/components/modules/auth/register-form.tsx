@@ -22,28 +22,18 @@ import { toast } from "sonner";
 
 import * as z from "zod";
 import { useRouter } from 'next/navigation';
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { UserPlus } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().min(1, "This field is required"),
+  name: z.string().min(1, "Name is required"),
   password: z.string().min(6, "Minimum length is 6 characters"),
-  email: z.email(),
+  email: z.string().email("Please enter a valid email"),
 });
 
 export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
-    
   const router = useRouter();
-
-
-  //   const handleGoogleLogin = async() => {
-  //   const data = await authClient.signIn.social({
-  //     provider: "google",
-  //     callbackURL: "/"
-  //   })
-  // }
-
-
-
-
 
   const form = useForm({
     defaultValues: {
@@ -54,8 +44,8 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
     validators: {
       onSubmit: formSchema,
     },
-  onSubmit: async ({ value }) => {
-      const toastId = toast.loading("Creating user");
+    onSubmit: async ({ value }) => {
+      const toastId = toast.loading("Creating your account...");
       try {
         const { data, error } = await authClient.signUp.email(value);
 
@@ -64,7 +54,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
           return;
         }
 
-        toast.success("User Created Successfully", { id: toastId });
+        toast.success("Account created successfully!", { id: toastId });
         router.push('/');
       } catch (err) {
         toast.error("Something went wrong, please try again.", { id: toastId });
@@ -73,110 +63,115 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
   });
 
   return (
-    <Card {...props}>
-      <CardHeader className="text-center">
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>
-          Enter your information below to create your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          id="login-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            form.handleSubmit();
-          }}
-        >
-          <FieldGroup>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="border-none bg-card/70 backdrop-blur-xl shadow-2xl overflow-hidden relative" {...props}>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#1cb89e] via-[#1cb89e]/50 to-[#1cb89e]" />
+        <CardHeader className="space-y-1 pb-6">
+          <div className="flex justify-center mb-2">
+            <div className="p-3 rounded-full bg-accent text-accent-foreground">
+              <UserPlus className="w-6 h-6" />
+            </div>
+          </div>
+          <CardTitle className="text-3xl font-bold tracking-tight text-center bg-clip-text text-transparent bg-gradient-to-r from-[#1cb89e] to-[#1cb89e]/60">
+            Join Us Today
+          </CardTitle>
+          <CardDescription className="text-center text-muted-foreground">
+            Create an account to start your learning journey
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form
+            id="register-form"
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+          >
             <form.Field
               name="name"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return  (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Your Name</FieldLabel>
-                    <Input
+              children={(field) => (
+                <div className="space-y-2">
+                  <FieldLabel className="text-sm font-medium" htmlFor={field.name}>Full Name</FieldLabel>
+                  <Input
                     id={field.name}
-                    name={field.name}
+                    className="bg-background/50 border-input focus:ring-ring transition-all"
+                    placeholder="John Doe"
                     value={field.state.value}
-                    type="text"
-                    placeholder="Enter Your Name"
-                    onChange={(e)=> field.handleChange(e.target.value)}
-                    />
-                     {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-                
-              }}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                    <p className="text-xs text-destructive">
+                      {field.state.meta.errors[0]?.message?.toString() || field.state.meta.errors[0]?.toString()}
+                    </p>
+                  )}
+                </div>
+              )}
             />
             <form.Field
               name="email"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return  (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Your Email</FieldLabel>
-                    <Input
+              children={(field) => (
+                <div className="space-y-2">
+                  <FieldLabel className="text-sm font-medium" htmlFor={field.name}>Email Address</FieldLabel>
+                  <Input
                     id={field.name}
-                    name={field.name}
+                    className="bg-background/50 border-input focus:ring-ring transition-all"
+                    placeholder="name@example.com"
                     value={field.state.value}
-                    type="email"
-                    placeholder="Enter Your Email"
-                    onChange={(e)=> field.handleChange(e.target.value)}
-                    />
-                     {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-                
-              }}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                    <p className="text-xs text-destructive">
+                      {field.state.meta.errors[0]?.message?.toString() || field.state.meta.errors[0]?.toString()}
+                    </p>
+                  )}
+                </div>
+              )}
             />
             <form.Field
               name="password"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return  (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>PassWord</FieldLabel>
-                    <Input
+              children={(field) => (
+                <div className="space-y-2">
+                  <FieldLabel className="text-sm font-medium" htmlFor={field.name}>Password</FieldLabel>
+                  <Input
                     id={field.name}
-                    name={field.name}
-                    value={field.state.value}
                     type="password"
-                    placeholder="password"
-                    onChange={(e)=> field.handleChange(e.target.value)}
-                    />
-                     {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-                
-              }}
+                    className="bg-background/50 border-input focus:ring-ring transition-all"
+                    placeholder="••••••••"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                    <p className="text-xs text-destructive">
+                      {field.state.meta.errors[0]?.message?.toString() || field.state.meta.errors[0]?.toString()}
+                    </p>
+                  )}
+                </div>
+              )}
             />
-          </FieldGroup>
-        </form>
-      </CardContent>
-     <CardFooter className="flex flex-col gap-5 justify-end">
-        <Button form="login-form" type="submit" className="w-full">
-          Register
-        </Button>
-        {/* <Button
-          onClick={() => handleGoogleLogin()}
-          variant="outline"
-          type="button"
-          className="w-full"
-        >
-          Continue with Google
-        </Button> */}
-      </CardFooter>
-    </Card>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <Button 
+            form="register-form" 
+            type="submit" 
+            className="w-full h-11 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white font-semibold shadow-lg shadow-[#1cb89e]/20 transition-all duration-300"
+          >
+            Create Account
+          </Button>
+          <p className="text-sm text-center text-muted-foreground">
+            Already have an account?{" "}
+            <Link href="/login" className="text-[#1cb89e] font-semibold hover:underline">
+              Sign in
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </motion.div>
   );
 }
+

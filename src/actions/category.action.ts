@@ -1,31 +1,18 @@
 "use server";
 
-import { categoryServices } from "@/services/category.service";
-
-export interface CategoryInput {
-  name: string;
-  slug?: string;
-}
+import { fetchApi } from "@/lib/fetch-api";
 
 export const getCategories = async () => {
-  return await categoryServices.getAllCategories();
-};
-
-export const createCategory = async (data: CategoryInput) => {
-  const result = await categoryServices.createCategory(data);
-
-  if (result?.error) {
-    throw new Error(result.error.message || "Failed to create Category");
+  try {
+    const result = await fetchApi<any>("/api/v1/categories", {
+      params: { 
+        limit: 100, 
+        sortBy: "id", 
+        isActive: true 
+      }
+    });
+    return { data: result?.data || result, error: null };
+  } catch (error: any) {
+    return { data: null, error: error.message || "Failed to fetch categories" };
   }
-
-  return result; // { data, error }
 };
-
-export async function deleteCategory(categoryId: number) {
-  const result = await categoryServices.deleteCategory(categoryId);
-  if (result?.error) {
-    throw new Error(result.error.message || "Failed to delete Category");
-  }
-
-  return result;
-}

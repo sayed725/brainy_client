@@ -25,7 +25,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { getCategories } from "@/actions/category.action";
 import {
   Select,
   SelectContent,
@@ -34,7 +33,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { addTutor } from "@/actions/tutor.action";
+import { useCategories } from "@/hooks/useCategories";
+import { useCreateTutor } from "@/hooks/useTutors";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
@@ -48,21 +48,10 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
     //   const { data: session, isPending, refetch } = authClient.useSession();
   const router = useRouter();
 
-  const [categories, setCategories] = useState<any[]>([]);
-  const [error, setError] = useState<{ message: string } | null>(null);
+  const { data: categoriesData = [] } = useCategories();
+  const categories = categoriesData as { id: number; name: string }[];
+  const createTutorMutation = useCreateTutor();
 
-  //   console.log(categories, error);
-
-  useEffect(() => {
-    async function load() {
-      const { data, error } = await getCategories();
-      setCategories(data.data);
-      setError(error);
-    }
-    load();
-  }, []);
-
-  //   console.log(categories);
   const timeSlots = ["MORNING", "AFTERNOON", "EVENING", "NIGHT"] as const;
 
   // TanStack Form Setup
@@ -103,14 +92,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
 
         // console.log("Sending to API:", tutorData);
 
-        const res = await addTutor(tutorData);
-
-        if (res.error) {
-          toast.error(res.error.message || "Failed to create tutor profile", {
-            id: toastId,
-          });
-          return;
-        }
+        await createTutorMutation.mutateAsync(tutorData);
 
         toast.success("Tutor profile created successfully!", { id: toastId });
          refetch();

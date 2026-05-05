@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import Navbar3 from "@/components/shared/Navbar3";
 import Footer from "@/components/shared/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import NextTopLoader from "nextjs-toploader";
+import QueryProvider from "@/providers/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,16 +34,18 @@ export default function RootLayout({
     <>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <body>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <NextTopLoader color="#1cb89e" showSpinner={false} />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-           
-            {children}
-            <Toaster richColors />
+            <QueryProvider>
+              {children}
+              <Toaster richColors />
+            </QueryProvider>
           </ThemeProvider>
         </body>
       </html>

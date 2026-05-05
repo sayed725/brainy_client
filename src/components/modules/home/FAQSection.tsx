@@ -6,6 +6,7 @@ import { ChevronDown } from 'lucide-react';
 import Lottie from "lottie-react";
 import { motion } from "framer-motion";
 import faqLottie from "../../../../public/faq.json";
+import SectionHeader from '@/components/shared/SectionHeader';
 import {
     Accordion,
     AccordionItem,
@@ -93,7 +94,13 @@ export default function FAQSection() {
                         className="w-full lg:w-1/2 px-4"
                     >
                        
-                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white  lg:text-left mb-10">Frequently <span className="text-[#1cb89e]">Asked Questions</span></h2>
+                        <SectionHeader 
+                          title="Frequently Asked Questions" 
+                          badge="F.A.Q"
+                          description="Everything you need to know about getting started, booking sessions, and growing as a tutor."
+                          descriptionClassName="hidden lg:block"
+                        />
+                        <div className="mb-8" />
                         <Accordion type="single" collapsible>
                             {faqData.map(({ id, question, answer }) => (
                                 <AccordionItem key={id} value={id}>

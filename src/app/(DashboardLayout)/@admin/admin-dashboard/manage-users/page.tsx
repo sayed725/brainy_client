@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { getAllUsers, updateUser, deleteUser } from "@/actions/user.action";
+import { useAllUsers, useUpdateUser, useDeleteUser } from "@/hooks/useUsers";
 import {
   Table,
   TableBody,
@@ -38,51 +38,26 @@ import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 
 export default function ManageUsers() {
   const { data: session } = authClient.useSession();
-  const [users, setUsers] = useState<any[]>([]);
+  const userId = session?.user?.id;
+
+  const { data: usersData = [], isLoading, error: queryError } = useAllUsers();
+  const updateUserMutation = useUpdateUser();
+  const deleteUserMutation = useDeleteUser();
+  
+  const users = usersData;
+  const loading = isLoading;
+  const error = queryError ? queryError.message || "Failed to load users" : null;
+
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: string | null;
     direction: "asc" | "desc";
   }>({ key: "createdAt", direction: "desc" });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-
-  const userId = session?.user?.id;
-
-  const refreshUsers = async () => {
-    if (!userId) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await getAllUsers();
-      if (result.error) {
-        throw new Error(result.error || "Failed to load users");
-      }
-      const userList = result.data?.data || [];
-      setUsers(userList);
-      setFilteredUsers(userList);
-      setCurrentPage(1);
-    } catch (err: any) {
-      const message = err.message || "Failed to load users";
-      setError(message);
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (userId) {
-      refreshUsers();
-    }
-  }, [userId]);
 
   // Search
   useEffect(() => {
@@ -142,7 +117,6 @@ export default function ManageUsers() {
 
   // Optimistic update
   const updateLocal = (status: boolean) => {
-    setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, uniqueStatus: status } : u)));
     setFilteredUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, uniqueStatus: status } : u)));
   };
 
@@ -150,16 +124,13 @@ export default function ManageUsers() {
 
   try {
     await toast.promise(
-      updateUser(userId, { uniqueStatus: newStatus }),
+      updateUserMutation.mutateAsync({ id: userId, userData: { uniqueStatus: newStatus } }),
       {
         loading: "Updating status...",
         success: `User marked as ${newStatus ? "Active" : "Inactive"}`,
         error: (err) => err.message || "Could not update user status",
       }
     );
-
-    // Keep data fresh (especially useful if other fields might change)
-    await refreshUsers();
   } catch {
     // Revert on failure
     updateLocal(currentStatus);
@@ -184,18 +155,15 @@ export default function ManageUsers() {
         if (!confirm("Are you sure you want to delete this user?")) return;
          try {
            await toast.promise(
-             deleteUser(id),
+             deleteUserMutation.mutateAsync(id),
              {
                loading: "Deleting user...",
                success: <b>user successfully deleted!</b>,
                error: (err) => <b>{err.message || "Failed to delete user"}</b>,
              }
            );
-           
-           await refreshUsers();
          } catch (error) {
-         
-           await refreshUsers();
+           // handled
          }
        };
 

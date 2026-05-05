@@ -26,7 +26,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import EditTutorModalContent from "@/components/modules/tutor/EditTutorModalContent";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { getTutorByUserId } from "@/actions/tutor.action";
+import { useTutorByUserId } from "@/hooks/useTutors";
 import TutorProfileSkelton from "@/components/modules/tutor/TutorProfileSkeleton";
 
 export default function TutorDashboard() {
@@ -34,44 +34,14 @@ export default function TutorDashboard() {
   const { data: session, isPending: isSessionLoading } =
      authClient.useSession();
  
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState<string | null>(null);
-   const [tutor, setTutor] = useState<Tutor | null>(null);
    const [open, setOpen] = useState(false); // ← added state for dialog control
 
    const userId = session?.user?.id;
 
-   const refreshTutor = async () => {
-     if (!userId) return;
-
-     setLoading(true);
-     setError(null);
-
-     try {
-       const result = await getTutorByUserId(userId);
-
-       if (result.error) {
-         throw new Error(result.error.message || "Failed to load tutor profile");
-       }
-
-       setTutor(result.data.data ?? null);
-     } catch (err: any) {
-       const message = err.message || "Failed to load tutor information";
-       setError(message);
-       console.error("Error loading tutor:", err);
-     } finally {
-       setLoading(false);
-     }
-   };
-
-   useEffect(() => {
-     if (userId) {
-       refreshTutor();
-     } else {
-       setLoading(false);
-       setTutor(null);
-     }
-   }, [userId]);
+   const { data: tutorData, isLoading, error: queryError, refetch } = useTutorByUserId(userId);
+   const tutor = tutorData as Tutor | null;
+   const loading = isLoading || (userId && !tutorData && !queryError);
+   const error = queryError ? queryError.message || "Failed to load tutor profile" : null;
 
   //  console.log("TutorDashboard State:", { userId, tutor, loading, error, open });
 
@@ -104,9 +74,7 @@ export default function TutorDashboard() {
 
    const handleSuccess = () => {
      setOpen(false);
-     // refresh data after update
-     refreshTutor();
-     // or window.location.reload() if you prefer full refresh
+     refetch();
    };
 
    return (

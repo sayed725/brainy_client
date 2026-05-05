@@ -6,11 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DollarSign, Clock, Star, User, Calendar, Mail, GraduationCap, ArrowLeft, BookOpen } from "lucide-react";
-import { tutorServices } from "@/services/tutor.service";
+import { fetchApi } from "@/lib/fetch-api";
 import Link from "next/link";
 import { TutorBooking } from "@/components/modules/tutor/TutorBooking";
-import { bookingServices } from "@/services/booking.service";
-
 // Optional: Type for better safety (you can expand it)
 export interface Tutor {
   id: string;
@@ -79,17 +77,12 @@ export default async function TutorDetailsPage({
 }) {
   const { id } = await params;
 
-  const result = await tutorServices.getSingleTutor(id);
-
-  // const bookingResult = await bookingServices.getBookingsByTutorId(id);
-
-  // console.log("Booking Result for Tutor ID", id, ":", bookingResult); 
-
-
-
-  
-
-
+  let result: any;
+  try {
+    result = await fetchApi<any>(`/api/v1/tutor/${id}`, { cache: "no-store" });
+  } catch (err: any) {
+    result = { error: { message: err.message } };
+  }
   if (result.error || !result.data) {
     console.error("Tutor fetch error:", result.error);
     notFound();

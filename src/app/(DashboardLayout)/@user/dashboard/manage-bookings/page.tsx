@@ -46,54 +46,30 @@ import {
 
 import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 import { authClient } from "@/lib/auth-client";
-import {
-  updateBookingStatus,
-  deleteBooking,
-  getAllBookings,
-  // createReview, // ← you'll add this action
-} from "@/actions/booking.action";
+import { useAllBookings, useUpdateBookingStatus, useDeleteBooking } from "@/hooks/useBookings";
+import { useAddReview } from "@/hooks/useReviews";
 
 import { VscRequestChanges } from "react-icons/vsc";
 import { Booking } from "@/constants/otherinterface";
-import { addReview } from "@/actions/review.action";
 
 export default function ManageBookings() {
-  const { data: session, isPending: isSessionLoading } =
-    authClient.useSession();
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const userId = session?.user?.id;
+
+  const { data: bookingsData = [], isLoading: isBookingsLoading, error: queryError } = useAllBookings();
+  const updateBookingStatusMutation = useUpdateBookingStatus();
+  const deleteBookingMutation = useDeleteBooking();
+  const addReviewMutation = useAddReview();
+
+  const loading = isBookingsLoading || (userId && !bookingsData.length && !queryError);
+  const error = queryError ? queryError.message || "Failed to load bookings" : null;
+  const bookings = bookingsData as Booking[];
 
   // Review dialog states
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-
-  const userId = session?.user?.id;
-
-  const refreshBookings = async () => {
-    if (!userId) return;
-
-    try {
-      const result = await getAllBookings();
-      if (result.error) {
-        throw new Error(result.error.message || "Failed to load bookings");
-      }
-      setBookings(result.data?.data || []);
-    } catch (err: any) {
-      setError(err.message || "Failed to refresh bookings");
-      toast.error("Could not load bookings");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (userId) {
-      refreshBookings();
-    }
-  }, [userId]);
 
   const handleStatusChange = async (
     bookingId: string,
@@ -112,31 +88,27 @@ export default function ManageBookings() {
     }[newStatus];
 
     try {
-      await toast.promise(updateBookingStatus(bookingId, newStatus), {
+      await toast.promise(updateBookingStatusMutation.mutateAsync({ bookingId, status: newStatus }), {
         loading: `${actionVerb} booking...`,
         success: <b>Booking successfully {pastVerb}!</b>,
         error: (err) => (
           <b>{err.message || `Failed to update booking status`}</b>
         ),
       });
-
-      await refreshBookings();
     } catch (err) {
-      await refreshBookings();
+      // handled
     }
   };
 
   const handleDelete = async (bookingId: string) => {
     try {
-      await toast.promise(deleteBooking(bookingId), {
+      await toast.promise(deleteBookingMutation.mutateAsync(bookingId), {
         loading: "Deleting booking...",
         success: <b>Booking successfully deleted!</b>,
         error: (err) => <b>{err.message || "Failed to delete booking"}</b>,
       });
-
-      await refreshBookings();
     } catch (error) {
-      await refreshBookings();
+      // handled
     }
   };
 
@@ -172,9 +144,7 @@ export default function ManageBookings() {
 
     try {
       await toast.promise(
-        addReview(reviewData), // ← your new server action
-        // createReview(reviewData),  // ← your new server action
-
+        addReviewMutation.mutateAsync(reviewData),
         {
           loading: "Submitting review...",
           success: <b>Review submitted successfully!</b>,
@@ -188,7 +158,6 @@ export default function ManageBookings() {
       );
 
       setReviewDialogOpen(false);
-      // await refreshBookings(); // optional - if you want to show updated status
     } catch (err) {
       // toast.promise already handles error
     }

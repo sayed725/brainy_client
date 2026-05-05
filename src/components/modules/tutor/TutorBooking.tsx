@@ -10,7 +10,7 @@ import { format, differenceInCalendarDays } from "date-fns";
 import { toast } from "sonner";
 import { Tutor } from "@/app/(CommonLayout)/tutors/[id]/page";
 import { authClient } from "@/lib/auth-client";
-import { addBooking } from "@/actions/booking.action";
+import { useCreateBooking } from "@/hooks/useBookings";
 
 
 // Time slot mapping (unchanged)
@@ -49,6 +49,8 @@ export function TutorBooking({ tutor }: TutorBookingProps) {
   const [booked, setBooked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = session?.user;
+  
+  const createBookingMutation = useCreateBooking();
 
   // console.log("TutorBooking Props:", { tutor, session, isPending });
 
@@ -124,21 +126,8 @@ async function confirmBooking() {
   };
 
   // console.log("Sending to API:", bookingData);
-  
   try {
-    const res = await addBooking(bookingData);
-
-    // console.log("API Response:", res);
-
-    
-  
-
-    // Handle API response styles (adjust according to your actual API)
-   if (res && 'error' in res && res.error) {
-      toast.error(res.error.message || "Booking failed", { id: toastId });
-      return;
-    }
-
+    await createBookingMutation.mutateAsync(bookingData);
     // ── Success path ─────────────────────────────────────────────
     toast.dismiss(toastId);               // remove loading
     toast.success("Booking request sent successfully!");

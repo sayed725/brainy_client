@@ -32,7 +32,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { deleteBooking, getAllBookings, updateBookingStatus } from "@/actions/booking.action";
+import { useAllBookings, useUpdateBookingStatus, useDeleteBooking } from "@/hooks/useBookings";
 import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 import { authClient } from "@/lib/auth-client";
 
@@ -46,42 +46,15 @@ import { Booking } from "@/constants/otherinterface";
 
 export default function ManageBookings() {
 
- const { data: session, isPending: isSessionLoading } =
-    authClient.useSession();
-   
-     const [loading, setLoading] = useState(true);
-     const [error, setError] = useState<string | null>(null);
-     const [bookings, setBookings] = useState<Booking[]>([]);
-   
-     const userId = session?.user?.id;
+  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const userId = session?.user?.id;
 
+  const { data: bookingsData = [], isLoading: isBookingsLoading, error: queryError } = useAllBookings();
+  const updateBookingStatusMutation = useUpdateBookingStatus();
+  const deleteBookingMutation = useDeleteBooking();
 
-     const refreshBookings = async () => {
-       if (!userId) return;
-     
-     //   setLoading(true);
-     //   setError(null);
-     
-       try {
-         const result = await getAllBookings();
-         if (result.error) {
-           throw new Error(result.error.message || "Failed to load bookings");
-         }
-         setBookings(result.data?.data || []);
-       } catch (err: any) {
-         setError(err.message || "Failed to refresh bookings");
-        //  toast.error("Could not load bookings");
-       } finally {
-         setLoading(false);
-       }
-     };
-     
-     // Initial load
-     useEffect(() => {
-       if (userId) {
-         refreshBookings();
-       }
-     }, [userId])
+  const loading = isBookingsLoading || (userId && !bookingsData.length && !queryError);
+  const bookings = bookingsData as Booking[];
 
     //  console.log("Bookings:", bookings);
 
@@ -105,38 +78,30 @@ export default function ManageBookings() {
      
        try {
          await toast.promise(
-           updateBookingStatus(bookingId, newStatus),
+           updateBookingStatusMutation.mutateAsync({ bookingId, status: newStatus }),
            {
              loading: `${actionVerb} booking...`,
              success: <b>Booking successfully {pastVerb}!</b>,
              error: (err) => <b>{err.message || `Failed to update booking status`}</b>,
            }
          );
-     
-         await refreshBookings();
-     
        } catch (err) {
-         // console.error(err);
          // toast.promise already handled error toast
-         await refreshBookings(); // keep UI in sync
        }
      };
 
      const handleDelete = async (bookingId: string) => {
        try {
          await toast.promise(
-           deleteBooking(bookingId),
+           deleteBookingMutation.mutateAsync(bookingId),
            {
              loading: "Deleting booking...",
              success: <b>Booking successfully deleted!</b>,
              error: (err) => <b>{err.message || "Failed to delete booking"}</b>,
            }
          );
-         
-         await refreshBookings();
        } catch (error) {
-       
-         await refreshBookings(); 
+         // handled
        }
      };
 

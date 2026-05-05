@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import { userServices } from "./services/user.service";
+
 import { Roles } from "./constants/roles";
 
 
@@ -11,12 +11,32 @@ export async function proxy(request: NextRequest) {
   let isTutor = false;
 
 
-  const { data } = await userServices.getSession();
+  const authUrl = process.env.AUTH_URL;
+  let sessionUser = null;
 
-  if (data && data.user) {
+  if (authUrl) {
+    try {
+      const res = await fetch(`${authUrl}/get-session`, {
+        method: "GET",
+        headers: {
+          Cookie: request.cookies.getAll().map((c) => `${c.name}=${c.value}`).join("; "),
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const sessionData = await res.json();
+        sessionUser = sessionData?.user;
+      }
+    } catch (err) {
+      console.error("Failed to fetch session in proxy:", err);
+    }
+  }
+
+  if (sessionUser) {
     isAuthenticated = true;
-    isAdmin = data.user.role === Roles.admin;
-    isTutor = data.user.role === Roles.tutor;
+    isAdmin = sessionUser.role === Roles.admin;
+    isTutor = sessionUser.role === Roles.tutor;
   }
 
   //* User in not authenticated 

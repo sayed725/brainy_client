@@ -32,7 +32,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
-import { createCategory, deleteCategory, getCategories } from "@/actions/category.action";
+import { useCategories, useCreateCategory, useDeleteCategory } from "@/hooks/useCategories";
 import DashboardPagesHeader from "@/components/shared/DashboardPagesHeader";
 
 type Category = {
@@ -42,12 +42,14 @@ type Category = {
 };
 
 export default function ManageCategories() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { data: categoriesData = [], isLoading: loading } = useCategories();
+  const categories = categoriesData as Category[];
+  const createCategoryMutation = useCreateCategory();
+  const deleteCategoryMutation = useDeleteCategory();
+
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form fields
   const [name, setName] = useState("");
@@ -56,27 +58,6 @@ export default function ManageCategories() {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
-  // Fetch categories
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await getCategories();
-      if (response?.data?.data) {
-        setCategories(response.data.data);
-        setFilteredCategories(response.data.data); // initial filter = all
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to load categories");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   // Search/filter effect
   useEffect(() => {
@@ -102,28 +83,21 @@ export default function ManageCategories() {
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
       const data = {
         name: name.trim(),
         slug: slug.trim() || undefined,
       };
 
-      const res = await createCategory(data);
+      await createCategoryMutation.mutateAsync(data);
 
-      if (res?.data) {
-        toast.success("Category created successfully!");
-        setFormOpen(false);
-        setName("");
-        setSlug("");
-        setCurrentPage(1);
-        await fetchCategories();
-      }
+      toast.success("Category created successfully!");
+      setFormOpen(false);
+      setName("");
+      setSlug("");
+      setCurrentPage(1);
     } catch (err: any) {
       toast.error(err.message || "Failed to create category");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -135,15 +109,13 @@ export default function ManageCategories() {
     if (!confirm("Are you sure you want to delete this category?")) return;
 
     try {
-      await toast.promise(deleteCategory(categoryId), {
+      await toast.promise(deleteCategoryMutation.mutateAsync(categoryId), {
         loading: "Deleting Category...",
         success: <b>Category successfully deleted!</b>,
         error: (err) => <b>{err.message || "Failed to delete category"}</b>,
       });
-
-      await fetchCategories();
     } catch (error) {
-      await fetchCategories();
+      // toast promise handles the error rendering
     }
   };
 
@@ -192,7 +164,7 @@ export default function ManageCategories() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Web Development"
-                  disabled={isSubmitting}
+                  disabled={createCategoryMutation.isPending}
                 />
               </div>
 
@@ -203,7 +175,7 @@ export default function ManageCategories() {
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                   placeholder="e.g. web-development"
-                  disabled={isSubmitting}
+                  disabled={createCategoryMutation.isPending}
                 />
                 <p className="text-xs text-muted-foreground">
                   Used in URLs. Leave empty to auto-generate.
@@ -215,13 +187,13 @@ export default function ManageCategories() {
               <Button
                 variant="outline"
                 onClick={() => setFormOpen(false)}
-                disabled={isSubmitting}
+                disabled={createCategoryMutation.isPending}
               >
                 Cancel
               </Button>
-              <Button onClick={handleCreate} disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isSubmitting ? "Creating..." : "Create Category"}
+              <Button onClick={handleCreate} disabled={createCategoryMutation.isPending}>
+                {createCategoryMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {createCategoryMutation.isPending ? "Creating..." : "Create Category"}
               </Button>
             </DialogFooter>
           </DialogContent>
