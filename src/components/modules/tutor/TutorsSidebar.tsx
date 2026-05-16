@@ -110,7 +110,7 @@ export default function TutorsSidebar({ categories }: TutorsSidebarProps) {
               >
                 All Categories
               </div>
-              {categories.map((cat) => (
+              {Array.isArray(categories) && categories.map((cat) => (
                 <div
                   key={cat.id}
                   className={`cursor-pointer px-3 py-2 rounded-md transition-colors text-sm min-w-fit  ${selectedCategory === cat.name

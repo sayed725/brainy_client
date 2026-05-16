@@ -108,8 +108,8 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
   });
 
   return (
-    <Card className="border-none shadow-xl bg-card/50 backdrop-blur-md rounded-3xl overflow-hidden">
-      <CardHeader className="pb-6 border-b border-border/30 bg-muted/20">
+    <Card className="border shadow-sm bg-card/50 backdrop-blur-md rounded-xl overflow-hidden">
+      <CardHeader className="pb-3 border-b border-border/30 bg-muted/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-[#1cb89e]/10">
@@ -123,7 +123,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-8 pt-8 px-8">
+      <CardContent className="space-y-4 lg:px-5 px-4">
         <form
           id="tutor-form"
           onSubmit={(e) => {
@@ -132,8 +132,8 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
           }}
           className="space-y-8"
         >
-          <FieldGroup className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FieldGroup className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* title  */}
               <form.Field
                 name="title"
@@ -149,7 +149,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
                         name={field.name}
                         required
                         placeholder="e.g. Senior Frontend Engineer"
-                        className="h-12 rounded-2xl border-border/50 focus-visible:ring-[#1cb89e]/20 bg-background/50 shadow-sm transition-all"
+                        className="h-12 rounded-xl border-border/50 focus-visible:ring-[#1cb89e]/20 bg-background/50 shadow-sm transition-all"
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
                       />
@@ -178,7 +178,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
                         value={field.state.value}
                         type="number"
                         placeholder="0.00"
-                        className="h-12 rounded-2xl border-border/50 focus-visible:ring-[#1cb89e]/20 bg-background/50 shadow-sm transition-all"
+                        className="h-12 rounded-xl border-border/50 focus-visible:ring-[#1cb89e]/20 bg-background/50 shadow-sm transition-all"
                         onChange={(e) =>
                           field.handleChange(Number(e.target.value) || 0)
                         }
@@ -220,7 +220,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
               }}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* time slot */}
               <form.Field
                 name="timeSlots"
@@ -244,14 +244,14 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
                         <SelectTrigger
                           id={field.name}
                           className={cn(
-                            "h-12 rounded-2xl border-border/50 bg-background/50 shadow-sm transition-all",
+                            "h-12 rounded-xl border-border/50 bg-background/50 shadow-sm transition-all",
                             isInvalid ? "border-destructive focus:ring-destructive" : ""
                           )}
                         >
                           <SelectValue placeholder="Select availability" />
                         </SelectTrigger>
 
-                        <SelectContent className="rounded-2xl">
+                        <SelectContent className="rounded-xl">
                           {timeSlots.map((slot) => (
                             <SelectItem key={slot} value={slot}>
                               {slot.charAt(0) + slot.slice(1).toLowerCase()}
@@ -287,7 +287,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
                         <SelectTrigger
                           id={field.name}
                           className={cn(
-                            "h-12 rounded-2xl border-border/50 bg-background/50 shadow-sm transition-all",
+                            "h-12 rounded-xl border-border/50 bg-background/50 shadow-sm transition-all",
                             isInvalid ? "border-destructive focus:ring-destructive" : ""
                           )}
                         >
@@ -323,7 +323,7 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
                       value={field.state.value}
                       type="string"
                       placeholder="https://example.com/your-image.jpg"
-                      className="h-12 rounded-2xl border-border/50 focus-visible:ring-[#1cb89e]/20 bg-background/50 shadow-sm transition-all"
+                      className="h-12 rounded-xl border-border/50 focus-visible:ring-[#1cb89e]/20 bg-background/50 shadow-sm transition-all"
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
                     {isInvalid && (
@@ -337,11 +337,11 @@ export default function TutorFormCard({ user, refetch }: TutorInfoCardProps) {
         </form>
       </CardContent>
 
-      <CardFooter className="p-8 border-t border-border/30 bg-muted/10">
+      <CardFooter className="p-5 border-t border-border/30 bg-muted/10">
         <Button 
           form="tutor-form" 
           type="submit" 
-          className="w-full h-14 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white text-lg font-black tracking-tight rounded-2xl shadow-xl shadow-[#1cb89e]/20 transition-all active:scale-[0.98]"
+          className="w-full h-14 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white text-lg font-black tracking-tight rounded-xl shadow-sm shadow-[#1cb89e]/20 transition-all active:scale-[0.98]"
         >
           Apply for Tutor
         </Button>

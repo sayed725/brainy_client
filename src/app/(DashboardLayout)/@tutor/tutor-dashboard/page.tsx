@@ -78,7 +78,7 @@ export default function TutorDashboard() {
    };
 
    return (
-      <div className="pb-16 max-w-screen-2xl mx-auto space-y-4">
+      <div className="pb-10 max-w-screen-2xl mx-auto space-y-3">
         {/* Header with Breadcrumbs/Title */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <DashboardPagesHeader
@@ -89,7 +89,7 @@ export default function TutorDashboard() {
  
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="h-12 px-6 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white font-black rounded-2xl shadow-xl shadow-[#1cb89e]/20 transition-all active:scale-95 gap-2">
+              <Button className="h-12 px-6 bg-[#1cb89e] hover:bg-[#1cb89e]/90 text-white font-black rounded-xl shadow-xl shadow-[#1cb89e]/20 transition-all active:scale-95 gap-2">
                 <Edit2 className="h-4 w-4" />
                 Edit Profile
               </Button>
@@ -107,13 +107,13 @@ export default function TutorDashboard() {
           {/* Left Column: Stats & Profile Info */}
           <div className="lg:col-span-8 space-y-3">
             {/* Main Profile Card */}
-            <Card className="border-none shadow-2xl bg-card/50 backdrop-blur-xl rounded-[2.5rem] overflow-hidden">
+            <Card className="border shadow-sm bg-card/50 backdrop-blur-xl rounded-xl overflow-hidden">
                {/* Cover Image/Header */}
                <div className="h-40 bg-gradient-to-br from-[#1cb89e] to-[#128c78] relative">
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
                </div>
 
-               <CardContent className="pt-0 relative px-6 md:px-10 pb-10">
+               <CardContent className="pt-0 relative px-4 md:px-6 pb-4">
                   <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-15 relative z-10">
                      <div className="relative group">
                         <div className="absolute inset-0 bg-[#1cb89e] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity" />
@@ -150,12 +150,12 @@ export default function TutorDashboard() {
 
                      <div className="mb-4">
                         {tutor.availability ? (
-                          <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-black text-xs uppercase tracking-widest">
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-black text-xs uppercase tracking-widest">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                             Available Now
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-rose-500/10 text-rose-500 border border-rose-500/20 font-black text-xs uppercase tracking-widest">
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20 font-black text-xs uppercase tracking-widest">
                             Currently Unavailable
                           </div>
                         )}
@@ -163,17 +163,17 @@ export default function TutorDashboard() {
                   </div>
 
                   <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <div className="p-6 rounded-3xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
+                    <div className="p-6 rounded-xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
                        <DollarSign className="h-5 w-5 text-[#1cb89e] mb-3" />
                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Hourly Rate</p>
                        <p className="text-xl font-black">${tutor.rate ?? "?"} <span className="text-xs text-muted-foreground">/ hour</span></p>
                     </div>
-                    <div className="p-6 rounded-3xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
+                    <div className="p-6 rounded-xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
                        <BookOpen className="h-5 w-5 text-[#1cb89e] mb-3" />
                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Sessions</p>
                        <p className="text-xl font-black">{tutor.totalBookIng ?? 0} <span className="text-xs text-muted-foreground">Bookings</span></p>
                     </div>
-                    <div className="p-6 rounded-3xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
+                    <div className="p-6 rounded-xl bg-muted/30 border border-border/50 group hover:bg-muted/50 transition-colors">
                        <Clock className="h-5 w-5 text-[#1cb89e] mb-3" />
                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Preferences</p>
                        <p className="text-xs font-bold truncate">{formatTimeSlots(tutor.timeSlots)}</p>
@@ -186,8 +186,8 @@ export default function TutorDashboard() {
                         <Award className="h-5 w-5 text-[#1cb89e]" />
                         Professional Bio
                       </h3>
-                      <div className="p-8 rounded-[2rem] bg-muted/20 border border-border/30 relative">
-                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-lg italic font-medium italic">
+                      <div className="p-4 rounded-xl bg-muted/20 border border-border/30 relative">
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-md italic font-medium italic">
                           &ldquo;{tutor.bio ?? "No bio provided yet."}&rdquo;
                         </p>
                       </div>
@@ -198,15 +198,15 @@ export default function TutorDashboard() {
           </div>
 
           {/* Right Column: Contact & Quick Stats */}
-          <div className="lg:col-span-4 space-y-6">
-             <Card className="border-none shadow-xl bg-card rounded-[2.5rem] overflow-hidden">
-                <CardHeader className="bg-muted/30 border-b border-border/50 p-8">
+          <div className="lg:col-span-4 space-y-3">
+             <Card className="border shadow-sm bg-card rounded-xl overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border/50">
                    <CardTitle className="text-xl font-black flex items-center gap-2">
                       <Mail className="h-5 w-5 text-[#1cb89e]" />
                       Contact Details
                    </CardTitle>
                 </CardHeader>
-                <CardContent className="p-8 space-y-6">
+                <CardContent className="space-y-6">
                    <div className="flex items-center gap-4 group">
                       <div className="p-3 rounded-2xl bg-[#1cb89e]/10 text-[#1cb89e] group-hover:scale-110 transition-transform">
                          <Mail className="h-5 w-5" />
@@ -217,7 +217,7 @@ export default function TutorDashboard() {
                       </div>
                    </div>
 
-                   <div className="flex items-center gap-4 group">
+                   <div className="flex items-center gap-3 group">
                       <div className="p-3 rounded-2xl bg-[#1cb89e]/10 text-[#1cb89e] group-hover:scale-110 transition-transform">
                          <Phone className="h-5 w-5" />
                       </div>
@@ -227,7 +227,7 @@ export default function TutorDashboard() {
                       </div>
                    </div>
 
-                   <div className="flex items-center gap-4 group">
+                   <div className="flex items-center gap-3 group">
                       <div className="p-3 rounded-2xl bg-[#1cb89e]/10 text-[#1cb89e] group-hover:scale-110 transition-transform">
                          <MapPin className="h-5 w-5" />
                       </div>
@@ -239,9 +239,9 @@ export default function TutorDashboard() {
                 </CardContent>
              </Card>
 
-             <Card className="border-none shadow-xl bg-card rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-muted/50 to-background">
-                <CardContent className="p-8">
-                   <div className="space-y-6">
+             <Card className="border shadow-sm bg-card rounded-xl overflow-hidden bg-gradient-to-br from-muted/50 to-background">
+                <CardContent className="p-">
+                   <div className="space-y-3">
                       <div className="flex items-center gap-4">
                         <div className="p-4 rounded-[1.5rem] bg-background shadow-xl text-[#1cb89e]">
                            <Award className="h-8 w-8" />

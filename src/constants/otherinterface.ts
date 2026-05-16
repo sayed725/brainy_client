@@ -12,6 +12,13 @@ export interface Booking {
   status: string; // "PENDING" | "CONFIRMED" | "CANCELLED"
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  slug: string | null;
+  image?: string | null;
+}
+
 
 
 

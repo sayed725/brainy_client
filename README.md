@@ -36,8 +36,9 @@ The application is architected using a **Modular Component Design** approach, le
 | **Language** | TypeScript 5 | End-to-end type safety |
 | **Authentication** | Better Auth | Session-based auth with role extraction |
 | **Animations** | Framer Motion + Lottie | Micro-interactions and hero animations |
+| **Data Fetching** | TanStack React Query | Query caching, invalidation, and synchronized state |
 | **Forms** | React Hook Form + Zod | Validated, schema-driven form handling |
-| **Tables** | TanStack React Table | Sortable, filterable data tables |
+| **Tables** | TanStack React Table | Structured data rendering |
 | **Charts** | Recharts | Dashboard KPI visualizations |
 | **UI Extras** | DnD Kit, Embla Carousel | Drag-and-drop sorting & image carousels |
 | **Date Utils** | date-fns + Moment.js | Booking date handling and formatting |
@@ -48,8 +49,9 @@ The application is architected using a **Modular Component Design** approach, le
 
 ### 🌐 Public Experience
 
-- **Landing Page**: Animated hero with stats counter, featured tutors, and category showcase.
-- **Tutor Marketplace**: Browse all verified tutors with subject category filters.
+- **Landing Page**: Animated hero with stats counter, featured tutors, and dynamic category showcase.
+- **Advanced Search Hub**: Centralized search integration that runs real-time backend queries to locate tutors by keyword, name, or subject.
+- **Tutor Marketplace**: Browse verified tutors with robust backend-driven filtering, multi-criteria sorting, and responsive pagination — fully synced with URL parameters.
 - **Tutor Detail Page**: Full profile with time slots, bio, session rate, and booking CTA.
 - **Blog Section**: Platform-wide informational articles.
 - **Contact Page**: Direct communication channel for inquiries.
@@ -71,13 +73,14 @@ The application is architected using a **Modular Component Design** approach, le
 - **Booking Pipeline**: View all incoming bookings and update their status (confirm/reject).
 - **Session Monitoring**: Track completed vs. pending sessions at a glance.
 
-### 🛡️ Administrative Console
+### 🛡️ Administrative Console (Command Center)
 
-- **Platform Overview**: Real-time stats — total users, tutors, bookings, and revenue.
-- **User Management**: View all registered users, update roles, and delete accounts.
+- **Platform Overview**: Real-time "Command Center" dashboard with interactive Recharts visualizations for revenue trends, role ratios, and category performance.
+- **User Management**: Robust data table featuring backend-driven sorting, searching by name/email, and filtering by role, status, and verification.
 - **Tutor Oversight**: Monitor all tutor profiles and manage platform listing integrity.
-- **Booking Oversight**: Global view of all platform bookings and their statuses.
-- **Category Manager**: Create, list, and delete subject categories used by tutors.
+- **Booking Oversight**: Comprehensive management table with real-time status updates and backend-powered queries.
+- **Category Manager**: Add, edit, and organize categories with server-side pagination.
+- **Premium Moderation UI**: Inspect detailed profiles, accounts, and session data via sleek, animated modals and sheets.
 
 ---
 
@@ -197,10 +200,14 @@ erDiagram
    - Next.js Image optimization for all tutor posters.
    - `no-store` cache on all authenticated fetches to keep data fresh.
    - Carousel and DnD kit for smooth content reordering.
+   - Reusable `USPagination` component that integrates seamlessly with backend-provided metadata.
 5. **Security**:
    - Session forwarding via `next/headers` cookies — no client-side token exposure.
    - Role-based route protection via Parallel Routes (`@admin`, `@tutor`, `@user`) and Middleware.
    - All mutations require valid session cookies propagated from the server.
+6. **Backend-Driven Architecture**:
+   - Integrates with a custom backend Query Builder via TanStack React Query.
+   - Offloads all searching, multi-field sorting, complex filtering, and pagination to the server, dramatically improving client-side performance and maintaining a single source of truth via URL parameters.
 
 ---
 

@@ -178,7 +178,7 @@ export default function ManageBookings() {
             placeholder="Search student name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-11 sm:h-12 bg-card border-none shadow-sm rounded-xl sm:rounded-2xl focus-visible:ring-[#1cb89e]/30 text-sm"
+            className="pl-10 h-10  bg-card border-none shadow-sm rounded-xl sm:rounded-2xl focus-visible:ring-[#1cb89e]/30 text-sm"
           />
         </div>
         
@@ -200,7 +200,7 @@ export default function ManageBookings() {
               variant="outline" 
               onClick={resetFilters}
               disabled={!isFiltered}
-              className="h-12 px-8 rounded-2xl bg-card border-none shadow-sm hover:bg-muted font-black text-sm disabled:opacity-50 transition-all active:scale-95"
+              className="h-10 px-8 rounded-2xl bg-card border-none shadow-sm hover:bg-muted font-black text-sm disabled:opacity-50 transition-all active:scale-95"
             >
               Reset
             </Button>
@@ -278,7 +278,7 @@ export default function ManageBookings() {
       </div>
 
       {!loading && bookings.length === 0 ? (
-        <Card className="border-none shadow-xl bg-card overflow-hidden rounded-[2rem]">
+        <Card className="border-none shadow-sm bg-card overflow-hidden rounded-[2rem]">
           <CardContent className="py-20 text-center">
             <div className="flex flex-col items-center justify-center gap-6 px-4 animate-in fade-in zoom-in duration-500">
                <div className="relative">
@@ -300,7 +300,7 @@ export default function ManageBookings() {
           </CardContent>
         </Card>
       ) : (
-        <Card className="border-none shadow-2xl bg-card overflow-hidden rounded-[2rem]">
+        <Card className="border-none shadow-sm bg-card overflow-hidden rounded-[2rem]">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader className="bg-muted/30">

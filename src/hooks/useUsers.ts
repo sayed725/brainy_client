@@ -1,17 +1,26 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchApi } from "@/lib/fetch-api";
 
-const extractData = (result: any): any[] => {
+export const extractData = (result: any): any[] => {
   const data = result?.data?.data || result?.data || result;
   return Array.isArray(data) ? data : [];
 };
 
-export function useAllUsers() {
+export function useAllUsers(params: Record<string, any> = {}) {
   return useQuery({
-    queryKey: ["users"],
+    queryKey: ["users", params],
     queryFn: async () => {
-      const result = await fetchApi("/api/v1/user");
-      return extractData(result);
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          searchParams.append(key, value.toString());
+        }
+      });
+ 
+      const queryString = searchParams.toString();
+      const url = `/api/v1/user${queryString ? `?${queryString}` : ""}`;
+      const result = await fetchApi(url);
+      return result; // Return raw result to access meta
     },
   });
 }

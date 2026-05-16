@@ -45,6 +45,12 @@ export function AppSidebar({
   user: { role: string; name?: string; email?: string };
 } & React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
+  const [mounted, setMounted] = React.useState(false);
+ 
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+ 
   let routes: Route[] = [];
 
   switch (user.role) {
@@ -62,6 +68,10 @@ export function AppSidebar({
       break;
   }
 
+  if (!mounted) {
+    return <Sidebar collapsible="icon" {...props} />;
+  }
+ 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

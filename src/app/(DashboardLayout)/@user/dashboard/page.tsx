@@ -208,7 +208,7 @@ export default function StudentProfile() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <Card className="border-none shadow-sm bg-card hover:shadow-md transition-shadow">
+            <Card className="border shadow-sm bg-card hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
@@ -225,9 +225,9 @@ export default function StudentProfile() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
         {/* Left Column - Profile & Security */}
-        <div className="lg:col-span-4 space-y-8">
+        <div className="lg:col-span-4 space-y-3">
           {/* Enhanced Profile Hero Card */}
-          <Card className="border-none shadow-xl overflow-hidden bg-card/50 backdrop-blur-xl">
+          <Card className="border shadow-sm overflow-hidden bg-card/50 backdrop-blur-xl">
             <div className="h-32 bg-gradient-to-br from-[#1cb89e] to-[#128c78] relative">
                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
             </div>
@@ -322,7 +322,7 @@ export default function StudentProfile() {
           </Card>
 
           {/* Security & Account Card */}
-          <Card className="border-none shadow-lg bg-card">
+          <Card className="border shadow-sm bg-card">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg font-bold">
                 <Shield className="h-5 w-5 text-[#1cb89e]" />
@@ -417,13 +417,13 @@ export default function StudentProfile() {
         </div>
 
         {/* Right Column - Account Details */}
-        <div className="lg:col-span-8 space-y-8">
-          <Card className="border-none shadow-xl bg-card relative overflow-hidden">
+        <div className="lg:col-span-8 space-y-3">
+          <Card className="border shadow-sm bg-card relative overflow-hidden">
              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
                 <User className="w-64 h-64 rotate-12" />
              </div>
              
-            <CardHeader className="border-b border-border/50 bg-muted/20 px-8 py-6">
+            <CardHeader className="border-b border-border/50 bg-muted/20 px-8 py-3">
                <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
                 <div className="flex-1 space-y-1">
                     <CardTitle className="text-xl font-black">Profile Completeness</CardTitle>
@@ -439,11 +439,11 @@ export default function StudentProfile() {
               </div>
             </CardHeader>
 
-            <CardContent className="p-8 space-y-10">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+            <CardContent className="p-5 space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
                 
                 {/* Full Name Field */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Full Display Name</Label>
                     {!isNameEditing && (
@@ -476,7 +476,7 @@ export default function StudentProfile() {
                     </div>
                   ) : (
                     <div className="group relative">
-                      <div className="h-14 px-5 rounded-2xl border bg-muted/30 border-border/50 flex items-center font-bold text-foreground group-hover:bg-muted/50 transition-all duration-300">
+                      <div className="h-14 px-5 rounded-xl border bg-muted/30 border-border/50 flex items-center font-bold text-foreground group-hover:bg-muted/50 transition-all duration-300">
                         {user.name || "Enter your name"}
                       </div>
                     </div>
@@ -486,7 +486,7 @@ export default function StudentProfile() {
                 {/* Email Address (Read-only) */}
                 <div className="space-y-4">
                   <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Primary Email Address</Label>
-                  <div className="h-14 px-5 rounded-2xl border bg-muted/10 border-border/20 flex items-center font-bold text-muted-foreground cursor-not-allowed opacity-80">
+                  <div className="h-14 px-5 rounded-xl border bg-muted/10 border-border/20 flex items-center font-bold text-muted-foreground cursor-not-allowed opacity-80">
                     {user.email}
                   </div>
                 </div>
@@ -494,7 +494,7 @@ export default function StudentProfile() {
                 {/* Phone Number */}
                 <div className="space-y-4">
                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Phone Number</Label>
-                   <div className="h-14 px-5 rounded-2xl border bg-muted/30 border-border/50 flex items-center font-bold text-foreground hover:bg-muted/50 transition-all duration-300 group">
+                   <div className="h-14 px-5 rounded-xl border bg-muted/30 border-border/50 flex items-center font-bold text-foreground hover:bg-muted/50 transition-all duration-300 group">
                       {phoneNumber}
                       <Info className="ml-auto h-4 w-4 text-muted-foreground opacity-50" />
                    </div>
@@ -503,13 +503,13 @@ export default function StudentProfile() {
                 {/* Account Type */}
                 <div className="space-y-4">
                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Member Since</Label>
-                   <div className="h-14 px-5 rounded-2xl border bg-muted/30 border-border/50 flex items-center font-bold text-foreground hover:bg-muted/50 transition-all duration-300">
+                   <div className="h-14 px-5 rounded-xl border bg-muted/30 border-border/50 flex items-center font-bold text-foreground hover:bg-muted/50 transition-all duration-300">
                       {formatSafe(session?.user?.createdAt)}
                    </div>
                 </div>
               </div>
 
-              <div className="pt-6">
+              <div className="">
                 <div className="p-6 rounded-3xl bg-gradient-to-br from-muted/50 to-muted/20 border border-border/50">
                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                       <div className="flex items-center gap-4">
@@ -529,13 +529,13 @@ export default function StudentProfile() {
               </div>
             </CardContent>
 
-            <CardFooter className="border-t border-border/50 bg-muted/10 p-8 flex justify-between items-center">
+            <CardFooter className="border-t border-border/50 bg-muted/10 flex flex-col md:flex-row justify-between items-center gap-3">
                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-[#1cb89e] animate-pulse" />
                   <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Server Synchronized</span>
                </div>
                <p className="text-xs font-medium text-muted-foreground">
-                 System Version: 2.4.0-stable
+                 Student Profile: Last updated {formatSafe(session?.user?.updatedAt)}
                </p>
             </CardFooter>
           </Card>

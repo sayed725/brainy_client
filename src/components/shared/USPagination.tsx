@@ -75,7 +75,7 @@ const USPagination = ({
                 if (page > 1) onPageChange(page - 1);
               }}
               className={cn(
-                "transition-all hover:bg-orange-50 dark:hover:bg-orange-950/20 hover:text-orange-600",
+                "transition-all hover:bg-[#1cb89e]/10 hover:text-[#1cb89e]",
                 page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
               )}
             />
@@ -93,10 +93,10 @@ const USPagination = ({
                   }}
                   isActive={page === p}
                   className={cn(
-                    "cursor-pointer transition-all duration-300 rounded-lg",
+                    "cursor-pointer transition-all duration-300 rounded-xl font-bold",
                     page === p
-                      ? "bg-orange-500 text-white border-orange-500 hover:bg-orange-600 hover:text-white"
-                      : "hover:bg-orange-50 dark:hover:bg-orange-950/20 hover:text-orange-600 border-transparent hover:border-orange-200"
+                      ? "bg-[#1cb89e] text-white border-[#1cb89e] hover:bg-[#1cb89e]/90 hover:text-white shadow-lg shadow-[#1cb89e]/20"
+                      : "hover:bg-[#1cb89e]/10 hover:text-[#1cb89e] border-transparent hover:border-[#1cb89e]/20"
                   )}
                 >
                   {p}
@@ -112,7 +112,7 @@ const USPagination = ({
                 if (page < totalPage) onPageChange(page + 1);
               }}
               className={cn(
-                "transition-all hover:bg-orange-50 dark:hover:bg-orange-950/20 hover:text-orange-600",
+                "transition-all hover:bg-[#1cb89e]/10 hover:text-[#1cb89e]",
                 page === totalPage
                   ? "pointer-events-none opacity-50"
                   : "cursor-pointer"

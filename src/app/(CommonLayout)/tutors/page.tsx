@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/sheet";
 import { Filter, X } from "lucide-react";
 import { useAllTutors } from "@/hooks/useTutors";
-import { useCategories } from "@/hooks/useCategories";
-import { Tutor } from "@/constants/otherinterface";
+import { useCategories, extractData } from "@/hooks/useCategories";
+import { Tutor, Category } from "@/constants/otherinterface";
 
 function TutorsGrid({ tutors, isLoading }: { tutors: Tutor[], isLoading: boolean }) {
   if (isLoading) {
@@ -56,7 +56,8 @@ function TutorsPageContent() {
   const sortBy = searchParams.get("sortBy") || "newest";
 
   const { data: tutors = [], isLoading: isLoadingTutors } = useAllTutors();
-  const { data: categories = [], isLoading: isLoadingCategories } = useCategories();
+  const { data: categoriesResponse, isLoading: isLoadingCategories } = useCategories();
+  const categories = useMemo(() => extractData(categoriesResponse) as Category[], [categoriesResponse]);
 
   // Filtering + Sorting logic (memoized)
   const filteredTutors = useMemo(() => {

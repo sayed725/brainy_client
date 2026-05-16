@@ -1,20 +1,32 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchApi } from "@/lib/fetch-api";
 
-const extractData = (result: any): any[] => {
+export const extractData = (result: any): any[] => {
   const data = result?.data?.data || result?.data || result;
   return Array.isArray(data) ? data : [];
 };
 
-export function useCategories() {
+export function useCategories(params?: {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: string;
+  isActive?: boolean;
+}) {
   return useQuery({
-    queryKey: ["categories"],
+    queryKey: ["categories", params],
     queryFn: async () => {
-      // We must pass sortBy: "id" because the backend fails trying to sort by non-existent "createdAt"
       const result = await fetchApi("/api/v1/categories", {
-        params: { sortBy: "id", sortOrder: "asc", limit: 100, isActive: true }
+        params: { 
+          sortBy: "id", 
+          sortOrder: "asc", 
+          limit: 10, 
+          isActive: true,
+          ...params 
+        }
       });
-      return extractData(result);
+      return result; // Return full result to access meta
     },
   });
 }
@@ -23,10 +35,26 @@ export function useCreateCategory() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (categoryData: { name: string; slug?: string }) => {
+    mutationFn: async (categoryData: { name: string; slug?: string; image?: string }) => {
       return fetchApi("/api/v1/categories", {
         method: "POST",
         body: JSON.stringify(categoryData),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
+}
+
+export function useUpdateCategory() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: number | string; data: { name?: string; slug?: string; image?: string } }) => {
+      return fetchApi(`/api/v1/categories/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(data),
       });
     },
     onSuccess: () => {

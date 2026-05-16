@@ -271,7 +271,7 @@ export default function ManageBookings() {
             placeholder="Search by tutor title, course or status..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 pr-10 h-11 w-full bg-card border-border focus-visible:ring-[#1cb89e]/20 rounded-xl shadow-sm"
+            className="pl-9 pr-10 h-10 w-full bg-card border-border focus-visible:ring-[#1cb89e]/20 rounded-xl shadow-sm"
           />
           {searchQuery && (
             <button 
@@ -403,7 +403,7 @@ export default function ManageBookings() {
       </div>
 
       {!loading && filteredBookings.length === 0 ? (
-        <Card className="border-none shadow-xl bg-card overflow-hidden">
+        <Card className="border-none shadow-sm bg-card overflow-hidden">
           <CardContent className="py-20 text-center">
             <div className="flex flex-col items-center justify-center gap-6 px-4 animate-in fade-in zoom-in duration-500">
                <div className="relative">
@@ -425,7 +425,7 @@ export default function ManageBookings() {
           </CardContent>
         </Card>
       ) : (
-        <Card className="border-none shadow-xl bg-card overflow-hidden">
+        <Card className="border-none shadow-sm bg-card overflow-hidden">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader className="bg-muted/30">

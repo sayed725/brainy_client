@@ -167,24 +167,24 @@ export default function StudentProfile() {
   };
 
   return (
-    <div className="pb-16 max-w-screen-2xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="pb-10 max-w-screen-2xl mx-auto space-y-8 animate-in fade-in duration-500">
       <DashboardPagesHeader
         title="Mentor Application"
         subtitle="Complete your profile details to start sharing your knowledge with students"
         icon={User}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
         {/* Left Column - Profile Summary */}
-        <div className="lg:col-span-4 xl:col-span-3 space-y-6">
-          <div className="sticky top-24 space-y-6">
+        <div className="lg:col-span-4 xl:col-span-3 space-y-3">
+          <div className="sticky top-24 space-y-3">
             <ProfileCard user={session.user} />
             <AccountInfoCard user={session.user} createdAt={session.user.createdAt} />
           </div>
         </div>
 
         {/* Right Column - Application Form */}
-        <div className="lg:col-span-8 xl:col-span-9 space-y-6">
+        <div className="lg:col-span-8 xl:col-span-9">
            <TutorFormCard user={session.user} refetch={refetch} />
         </div>
       </div>
